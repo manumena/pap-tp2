@@ -1,0 +1,122 @@
+% ALGUNOS PAQUETES REQUERIDOS (EN UBUNTU): %
+% ========================================
+% %
+% texlive-latex-base %
+% texlive-latex-recommended %
+% texlive-fonts-recommended %
+% texlive-latex-extra %
+% texlive-science %
+% texlive-lang-spanish (en ubuntu 13.10) %
+% ******************************************************** %
+
+\documentclass[a4paper]{article}
+\usepackage[spanish, es-nodecimaldot]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage[pdftex]{graphicx}
+\usepackage{sidecap}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{makeidx}
+\usepackage{float}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amsfonts}
+\usepackage{sectsty}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{listingsutf8}
+
+\linespread{factor}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\pgfplotsset{compat=1.8}
+\setlist[enumerate]{label*=\arabic*.}
+\lstset{
+	inputencoding=utf8/latin1,
+	language=C++,
+	basicstyle=\ttfamily,
+	keywordstyle=\bfseries\color{blue},
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{mygreen}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#},
+	numbers=left,
+	numberstyle=\color{mygray}
+}
+
+\input{page.layout}
+\usepackage{caratula}
+
+\allowdisplaybreaks
+\newcommand{\ord}{\ensuremath{\operatorname{O}}}
+\newcommand{\nat}{\ensuremath{\mathbb{N}}}
+\newcommand{\acr}[1]{\lowercase{\textsc{#1}}}
+\newcommand{\comp}{\ensuremath{^{\operatorname{C}}}}
+\newcommand{\argmax}{\operatornamewithlimits{arg\,m\acute{a}x}}
+
+\newcommand{\subheading}[1]{\vspace{1em} \noindent\textbf{#1} \nopagebreak
+\smallskip \nopagebreak}
+
+% Lemas, definiciones, etc.
+\theoremstyle{plain}
+  \newtheorem{prop}{Proposición}
+  \newtheorem{lema}{Lema}
+\theoremstyle{remark}
+  \newtheorem{obs}{Observación}
+\theoremstyle{definition}
+  \newtheorem{defi}{Definición}
+
+% Pseudocódigo
+\usepackage[onelanguage, spanish]{algorithm2e}
+    % \NoCaptionOfAlgo
+    \LinesNumbered\RestyleAlgo{ruled}\IncMargin{1em}\DontPrintSemicolon
+    \SetArgSty{}\SetCommentSty{textsf}\SetFuncSty{textsf}
+    \SetKwInput{Input}{Entrada}
+    \SetKwInput{Output}{Salida}
+    \SetKwProg{For}{para}{ hacer}{fin}
+    \SetKwProg{Fn}{función}{:}{fin}
+
+\begin{document}
+\materia{Problemas, Algoritmos y Programación}
+\submateria{Segundo cuatrimestre de 2016}
+\titulo{Trabajo Práctico N\textsuperscript{o} 2}
+\integrante{Shai Bianchi}{540/12}{bianchishai@gmail.com}
+\integrante{Martín Jedwabny}{885/13}{martiniedva@gmail.com}
+\integrante{Manuel Mena}{313/14}{manuelmena1993@gmail.com}
+\integrante{Iván Pondal}{078/14}{ivan.pondal@gmail.com}
+
+%\maketitle
+% no footer on the first page
+
+% group hash
+% seed = 2^32 + 42
+\vspace*{\fill}
+\begin{center}
+8796613900571664
+\end{center}
+\vspace*{\fill}
+
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+
+\newpage
+\input{ej1}
+
+\newpage
+\input{ej2}
+
+\newpage
+\input{ej3}
+
+\newpage
+\input{ej4}
+
+\end{document}
