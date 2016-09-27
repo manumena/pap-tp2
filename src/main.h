@@ -1,5 +1,5 @@
-#ifndef PAP_TP1_MAIN_H
-#define PAP_TP1_MAIN_H
+#ifndef PAP_TP2_MAIN_H
+#define PAP_TP2_MAIN_H
 
 #include <iostream>      // cout, cin, <<
 #include <fstream>       // ifstream, ofstream
@@ -69,4 +69,4 @@ std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
-#endif  // PAP_TP1_MAIN_H
+#endif  // PAP_TP2_MAIN_H
