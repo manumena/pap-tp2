@@ -7,6 +7,7 @@
 #include <unistd.h>      // getopt
 #include <cstdlib>       // srand, rand
 #include <vector>
+#include <list>
 
 // Imprimir ayuda por pantalla
 void show_help(char* bin_path);
@@ -28,6 +29,25 @@ bool compare_vectors(const std::vector<T> v1, const std::vector<T> v2) {
         }
     }
     return true;
+}
+
+// Imprime una list
+template <typename T>
+std::ostream& operator <<(std::ostream& os, const std::list<T>& l) {
+    os << "[";
+    bool first = true;
+    for (typename std::list<T>::const_iterator it = l.begin();
+        it != l.end(); ++it)
+    {
+        if (! first) {
+            os << ", ";
+        } else {
+            first = false;
+        }
+        os << *it;
+    }
+    os << "]";
+    return os;
 }
 
 // Imprime un vector
