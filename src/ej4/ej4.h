@@ -14,6 +14,8 @@ struct query {
     int origin, destination;
 };
 
+typedef vector<vector<int>> adj_list;
+
 // Here go declarations of functions which are exported by the problem solver,
 // global variables, etc.
 
