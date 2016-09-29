@@ -3,6 +3,7 @@
 
 #include "../main.h"
 #include <utility>
+#include <stack>
 
 using namespace std;
 
