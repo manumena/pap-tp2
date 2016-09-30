@@ -5,8 +5,6 @@
 **  Problem solver
 */
 
-auto nobehavior = [](){};
-
 template <class ClosingBehavior>
 void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior close) {
     vector<bool> gray(g.size(), false);
@@ -20,7 +18,7 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior
     while (!s.empty()) {
         int v = s.top();
         for (int w : g[v]) {
-            if (!gray[w]) {
+            if (!(gray[w] || black[w])) {
                 gray[w] = true;
                 s.push(w);
             }
@@ -35,21 +33,17 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior
 
 // provides possibility of specifying behavior for each closing vertex and each discovered tree
 template <class ClosingBehavior, class ForestingBehavior>
-void dfs(adj_list& g, ClosingBehavior close, ForestingBehavior foresting, int root = 0) {
+void dfs(adj_list& g, ClosingBehavior close, ForestingBehavior foresting) {
     vector<bool> black(g.size());
 
-    int i = 0;
-    vector<int> vertex_sequence(g.size());
-    generate_n(vertex_sequence.begin(), g.size(), [&i] () {return i++;}); // create vertex range
-    swap(vertex_sequence[0], vertex_sequence[root]); // place root at the beginning
-
-    for (int v : vertex_sequence){
+    for (size_t v = 0; v < black.size(); ++v) {
         if (!black[v]) {
             dfs_single_tree(g, v, black, close);
             foresting();
         }
     }
 }
+
 
 vector<size_t> kosaraju(adj_list& g) {
     size_t n = g.size();
@@ -63,18 +57,19 @@ vector<size_t> kosaraju(adj_list& g) {
 
     vector<size_t> result(n);
     size_t scc_id = 0;
-    // for (int root : scc_sequence) {
-    //     dfs(g_t, [&g_t, &result, &scc_id] (int v) { result[v] = scc_id; }, [&scc_id] () { scc_id++; cout << "scc_id " << scc_id << endl;}, root);
-    // }
-
-    dfs(g_t, [&result, &scc_id] (int v) { cout << v << " <- " << scc_id << endl; result[v] = scc_id; }, [&scc_id] () { scc_id++; cout << "scc_id " << scc_id << endl;});
+    dfs(g_t, [&result, &scc_id] (int v) { result[v] = scc_id; }, [&scc_id] () { scc_id++; });
 
     return result;
 }
 
 void solve(adj_list& g, vector<query>& qs) {
     vector<size_t> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
-    cout << scc_ids << endl;
+
+    for (query q : qs)
+        if (scc_ids[q.origin] == scc_ids[q.destination])
+            cout << "S" << endl;
+        else
+            cout << "N" << endl;
 }
 
 void run_solver() {
@@ -97,7 +92,7 @@ void run_solver() {
         cin >> f >> t;
         qry.origin = f-1;
         qry.destination = t-1;
-        qs.push_back(qry);
+        qs[i] = qry;
     }
 
     solve(g, qs);
