@@ -4,6 +4,8 @@
 #include "../main.h"
 #include <utility>
 #include <stack>
+#include <algorithm>
+#include <utility>
 
 using namespace std;
 

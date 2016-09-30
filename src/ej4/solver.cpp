@@ -5,8 +5,10 @@
 **  Problem solver
 */
 
+auto nobehavior = [](){};
+
 template <class ClosingBehavior>
-void dfs_with_root(adj_list& g, int root, vector<bool>& black, ClosingBehavior close) {
+void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior close) {
     vector<bool> gray(g.size(), false);
     stack<int> s;
 
@@ -31,35 +33,48 @@ void dfs_with_root(adj_list& g, int root, vector<bool>& black, ClosingBehavior c
     }
 }
 
-template <class ClosingBehavior>
-void dfs(adj_list& g, ClosingBehavior close) {
+// provides possibility of specifying behavior for each closing vertex and each discovered tree
+template <class ClosingBehavior, class ForestingBehavior>
+void dfs(adj_list& g, ClosingBehavior close, ForestingBehavior foresting, int root = 0) {
     vector<bool> black(g.size());
-    for (size_t v = 0; v < g.size(); ++v)
-        if (!black[v])
-            dfs_with_root(g, v, black, close);
+
+    int i = 0;
+    vector<int> vertex_sequence(g.size());
+    generate_n(vertex_sequence.begin(), g.size(), [&i] () {return i++;}); // create vertex range
+    swap(vertex_sequence[0], vertex_sequence[root]); // place root at the beginning
+
+    for (int v : vertex_sequence){
+        if (!black[v]) {
+            dfs_single_tree(g, v, black, close);
+            foresting();
+        }
+    }
 }
 
-// adj_list get_inverted(adj_list& g) {
-//     adj_list g_t(g.size());
-    // dfs_with_root(g, v, black, [&g, &i, &result] (int v) {for (int w : g[v]) {result[--i] = v;} });
-// }
-
 vector<size_t> kosaraju(adj_list& g) {
-    vector<int> scc_sequence(g.size());
-    size_t i = scc_sequence.size()-1;
-    dfs(g, [&g, &i, &scc_sequence] (int v) { scc_sequence[i--] = v; }); // ordering by decreasing finishing time according to DFS
+    size_t n = g.size();
 
-    adj_list g_t(g.size()); // transpose of g
-    dfs(g, [&g, &g_t] (int v) { for (int w : g[v]) { g_t[w].push_back(v); } });
+    vector<int> scc_sequence(n);
+    size_t i = n-1;
+    dfs(g, [&g, &i, &scc_sequence] (int v) { scc_sequence[i--] = v; }, nobehavior); // ordering by decreasing finishing time according to DFS
 
-    cout << "Kosaraju sequence: " << scc_sequence << endl;
-    for (auto& l : g_t) for (auto& u : l) u++;
-    cout << "Grafo invertido: " << g_t << endl;
-    return {};
+    adj_list g_t(n); // transpose of g
+    dfs(g, [&g, &g_t] (int v) { for (int w : g[v]) { g_t[w].push_back(v); } }, nobehavior);
+
+    vector<size_t> result(n);
+    size_t scc_id = 0;
+    // for (int root : scc_sequence) {
+    //     dfs(g_t, [&g_t, &result, &scc_id] (int v) { result[v] = scc_id; }, [&scc_id] () { scc_id++; cout << "scc_id " << scc_id << endl;}, root);
+    // }
+
+    dfs(g_t, [&result, &scc_id] (int v) { cout << v << " <- " << scc_id << endl; result[v] = scc_id; }, [&scc_id] () { scc_id++; cout << "scc_id " << scc_id << endl;});
+
+    return result;
 }
 
 void solve(adj_list& g, vector<query>& qs) {
     vector<size_t> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
+    cout << scc_ids << endl;
 }
 
 void run_solver() {
