@@ -13,11 +13,14 @@ using namespace std;
 **  Exercise 4
 */
 
+typedef size_t scc_id;
+typedef size_t v_id;
+
 struct query {
-    int origin, destination;
+    v_id origin, destination;
 };
 
-typedef vector<vector<int>> adj_list;
+typedef vector<vector<v_id>> adj_list;
 
 
 /* For DFS */

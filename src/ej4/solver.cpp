@@ -19,7 +19,7 @@ void run_solver() {
 }
 
 vector<bool> solve(adj_list& g, vector<query>& qs) {
-    vector<size_t> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
+    vector<scc_id> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
 
     vector<bool> result(qs.size());
     auto query_evaluator = [&scc_ids] (query& q) { return scc_ids[q.origin] == scc_ids[q.destination]; };
@@ -33,11 +33,11 @@ vector<size_t> kosaraju(adj_list& g) {
     size_t n = g.size();
 
     /* Sequence vertices in decreasing finishing-time order */
-    vector<int> scc_sequence(n);
+    vector<v_id> kos_sequence(n);
     size_t i = n-1;
     dfs (
         g,
-        [&g, &i, &scc_sequence] (int v) { scc_sequence[i--] = v; }, // add each vertex to front of scc_sequence at DFS closing time
+        [&g, &i, &kos_sequence] (v_id v) { kos_sequence[i--] = v; }, // add each vertex to front of kos_sequence at DFS closing time
         nobehavior // no special behavior for foresting
     );
 
@@ -45,16 +45,16 @@ vector<size_t> kosaraju(adj_list& g) {
     adj_list g_t(n); // transpose of g
     dfs (
         g,
-        [&g, &g_t] (int v) { for (int w : g[v]) g_t[w].push_back(v); }, // for each edge in g, add inverted edge to g_t
+        [&g, &g_t] (v_id v) { for (v_id w : g[v]) g_t[w].push_back(v); }, // for each edge in g, add inverted edge to g_t
         nobehavior // no special behavior for foresting
     );
 
     /* Discover SCCs */
-    vector<size_t> result(n);
+    vector<scc_id> result(n);
     size_t scc_id = 0;
     dfs (
         g_t,
-        [&result, &scc_id] (int v) { result[v] = scc_id; }, // assign vertex to current SCC being explored
+        [&result, &scc_id] (v_id v) { result[v] = scc_id; }, // assign vertex to current SCC being explored
         [&scc_id] () { scc_id++; } // increment ID for next SCC to be explored
     );
 
@@ -82,14 +82,14 @@ void dfs(adj_list& g, VertexClosingCallable close_vertex, TreeClosingCallable cl
 template <class VertexClosingCallable>
 void dfs_single_tree(adj_list& g, int root, vector<bool>& black, VertexClosingCallable close_vertex) {
     vector<bool> gray(g.size(), false);
-    stack<int> s;
+    stack<v_id> s;
 
     gray[root] = true;
     s.push(root);
 
     while (!s.empty()) {
-        int v = s.top();
-        for (int w : g[v]) {
+        v_id v = s.top();
+        for (v_id w : g[v]) {
             if (!(gray[w] || black[w])) {
                 gray[w] = true;
                 s.push(w);
@@ -109,7 +109,7 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, VertexClosingCa
 
 adj_list read_graph(istream& is) {
     size_t a, p;
-    int v1, v2;
+    v_id v1, v2;
 
     is >> a >> p;
     adj_list g(a); // adjacency list
@@ -123,7 +123,7 @@ adj_list read_graph(istream& is) {
 
 vector<query> read_queries(istream& is) {
     size_t q;
-    int f, t;
+    v_id f, t;
     query qry;
 
     is >> q;
