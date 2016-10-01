@@ -63,28 +63,26 @@ vector<size_t> kosaraju(adj_list& g) {
 
 /*******************************/
 /*
-    This implementation of DFS accepts callables through parameters "close" and "forest":
-        - "close" is called each time a vertex is being closed;
-        - "forest" is called each time a tree is begin closed.
+    This implementation of DFS accepts callables through parameters "close_vertex" and "close_tree":
+        - "close_vertex" is called each time a vertex is being closed;
+        - "close_tree" is called each time a tree is begin closed.
 */
 
-template <class ClosingCallable, class ForestingCallable>
-void dfs(adj_list& g, ClosingCallable close, ForestingCallable forest) {
+template <class VertexClosingCallable, class TreeClosingCallable>
+void dfs(adj_list& g, VertexClosingCallable close_vertex, TreeClosingCallable close_tree) {
     vector<bool> black(g.size());
     for (size_t v = 0; v < black.size(); ++v) {
         if (!black[v]) {
-            dfs_single_tree(g, v, black, close);
-            forest();
+            dfs_single_tree(g, v, black, close_vertex);
+            close_tree();
         }
     }
 }
 
-template <class ClosingCallable>
-void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingCallable close) {
+template <class VertexClosingCallable>
+void dfs_single_tree(adj_list& g, int root, vector<bool>& black, VertexClosingCallable close_vertex) {
     vector<bool> gray(g.size(), false);
     stack<int> s;
-
-    adj_list g_t(g.size());
 
     gray[root] = true;
     s.push(root);
@@ -99,7 +97,7 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingCallable
         }
         if (s.top() == v) {
             black[v] = true;
-            close(v);
+            close_vertex(v);
             s.pop();
         }
     }
