@@ -6,20 +6,27 @@
 */
 
 void run_solver() {
-    adj_list g = read_graph();
-    vector<query> qs = read_queries();
+    adj_list g = read_graph(cin);
+    vector<query> qs = read_queries(cin);
 
-    solve(g, qs);
-}
+    vector<bool> result = solve(g, qs);
 
-void solve(adj_list& g, vector<query>& qs) {
-    vector<size_t> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
-
-    for (query q : qs)
-        if (scc_ids[q.origin] == scc_ids[q.destination]) // origin's SCC coincides with desintation's
+    for (bool a : result)
+        if (a)
             cout << "S" << endl;
         else
             cout << "N" << endl;
+}
+
+vector<bool> solve(adj_list& g, vector<query>& qs) {
+    vector<size_t> scc_ids = kosaraju(g); // scc_ids[v] = ID of SCC to which v belongs
+
+    vector<bool> result(qs.size());
+    auto query_evaluator = [&scc_ids] (query& q) { return scc_ids[q.origin] == scc_ids[q.destination]; };
+
+    transform(qs.begin(), qs.end(), result.begin(), query_evaluator);
+
+    return result;
 }
 
 vector<size_t> kosaraju(adj_list& g) {

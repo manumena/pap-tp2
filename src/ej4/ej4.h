@@ -32,7 +32,7 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior
 /*************/
 
 vector<size_t> kosaraju(adj_list& g);
-void solve(adj_list& g, vector<query>& qs);
+vector<bool> solve(adj_list& g, vector<query>& qs);
 void run_solver();
 
 /*************/
