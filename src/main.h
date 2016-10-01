@@ -69,4 +69,14 @@ std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
+// Compara vectores
+template <typename T>
+bool operator==(std::vector<T>& v1, std::vector<T>& v2) {
+    bool result;
+    size_t i;
+    for (i = 0; i < min(v1.size(), v2.size()); ++i)
+        result = result && v1.at(i) == v2.at(i);
+    return result && i == max(v1.size(), v2.size());
+}
+
 #endif  // PAP_TP2_MAIN_H
