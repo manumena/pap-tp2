@@ -1,1 +1,31 @@
 \section{Ejercicio 4}
+
+\subsection{Problema y modelo}
+
+El problema plantea un escenario en el que se tienen aulas y pasillos que las conectan, permitiendo estos pasillos el recorrido por ellos en un solo sentido cada uno, no habiendo ningún pasillo que conecte un aula consigo misma ni un par de pasillos que conecten dos aulas en el mismo sentido. Así, una instancia del problema puede modelarse mediante un grafo dirigido cuyos vértices representan las aulas y en el que hay un eje dirigido por cada pasillo, sin \textit{multiejes} (varios ejes que conecten dos vértices en un mismo sentido) ni \textit{bucles} (ejes que conecten a un vértice consigo mismo).
+
+El problema pide evaluar cierta cantidad de consultas (de ahora en más \textit{consultas de circulación}), cada una consistiendo en un par ordenado de aulas $a$ y $b$ (notación $\langle a,b \rangle$), debiendo la solución responder para cada uno si es posible recorrer los pasillos dados de modo de partir de $a$, pasar por $b$ y volver a $a$. En nuestro modelo, esto equivale a detectar si existe un camino dirigido entre $a$ y $b$ y otro entre $b$ y $a$ en el grafo inducido por la instancia en cuestión.
+
+\subsection{Solución}
+
+\subsubsection{Idea general}
+
+Abordaremos la solución en dos etapas. En la primera, buscaremos procesar el grafo en tiempo lineal en su cantidad de vértices y ejes para generar una estructura que, en segunda instancia, permita responder en tiempo constante cada consulta de circulación que se le haga. Notemos que, si $A$ es la cantidad de aulas, $P$ la de pasillos y $Q$ la de consultas, este enfoque naturalmente cumpliría con la complejidad requerida de $O(A+P+Q)$, incurriendo la primera etapa de procesamiento del grafo un costo de $O(A+P)$ y la segunda de respuesta a consultas uno de $O(Q)$.
+
+Entonces, para la primera etapa, nos interesa encontrar una forma de reducir la información del grafo a una estructura que resuma las posibilidades de circulación entre las distintas aulas. Concretamente, queremos poder determinar si, para un par ordenado de aulas arbitrario, es posible ir de la primera a la segunda y volver.
+
+En relación a esto, observemos que:
+\begin{itemize}
+    \item Si un par de aulas está en una misma componente fuertemente conexa, es posible ir de cualquiera de ellas a la otra y luego volver.
+    \item Si es posible ir de un aula a otra y volver, este par de aulas conforma un subgrafo fuertemente conexo que por ende es subgrafo de alguna componente fuertemente conexa del grafo \textit{\textbf{(¿hace falta explicar más de por qué eso vale?)}}.
+\end{itemize}
+
+Esta última observación establece una equivalencia entre la positividad de la respuesta correcta a una consulta de circulación y la pertenencia de las aulas involucradas en ella a una misma componente fuertemente conexa del grafo de aulas y pasillos. De esta forma, la respuesta a la consulta $\langle a,b \rangle$ debe ser positiva si $a$ y $b$ pertenecen a la misma componente conexa y negativa si no.
+
+En conclusión, en la primera etapa nos bastará con construir en tiempo lineal, a partir de un grafo de aulas y pasillos, una estructura que permita consultar en tiempo constante si un par de aulas corresponden a una misma componente fuertemente conexa de ese grafo. Luego, en la segunda etapa, sencillamente evaluaremos cada una de las $Q$ consultas en tiempo constante utilizando esa estructura.
+
+\subsubsection{Algoritmo}
+
+\subsubsection{Detalles de implementación}
+
+\textit{\textbf{Todo lo de los DFSs.}}
