@@ -6,17 +6,14 @@
 **  Unit tests
 */
 
-struct test_case_input {
-    string input_filename;
-    string expected_filename;
-};
+string CASE_DIR = "ej4/cases/";
 
 vector<test_case_input> cases_filenames = {
-    {"ej4/cases/ssd/ssd.dat", "ej4/cases/ssd/ssd.out"},
-    {"ej4/cases/sss/sss.dat", "ej4/cases/sss/sss.out"},
-    {"ej4/cases/vsc/vsc.dat", "ej4/cases/vsc/vsc.out"},
-    {"ej4/cases/vsdc/vsdc.dat", "ej4/cases/vsdc/vsdc.out"},
-    {"ej4/cases/vsdd/vsdd.dat", "ej4/cases/vsdd/vsdd.out"}
+    {CASE_DIR + "ssd/ssd.dat", CASE_DIR + "ssd/ssd.out"},
+    {CASE_DIR + "sss/sss.dat", CASE_DIR + "sss/sss.out"},
+    {CASE_DIR + "vsc/vsc.dat", CASE_DIR + "vsc/vsc.out"},
+    {CASE_DIR + "vsdc/vsdc.dat", CASE_DIR + "vsdc/vsdc.out"},
+    {CASE_DIR + "vsdd/vsdd.dat", CASE_DIR + "vsdd/vsdd.out"}
 };
 
 vector<bool> read_results(istream& is) {
@@ -44,7 +41,7 @@ void run_unit_tests() {
             vector<query> input_queries = read_queries(input_file);
 
             vector<bool> obtained = solve(input_graph, input_queries);
-            
+
             ASSERT(obtained == read_results(expected_file));
         };
         RUN_TEST (run_case);

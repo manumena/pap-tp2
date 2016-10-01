@@ -45,4 +45,9 @@ vector<bool> read_results(istream&);
 
 /* For Testing */
 
+struct test_case_input {
+    string input_filename;
+    string expected_filename;
+};
+
 #endif // PAP_TP2_EJ4_H
