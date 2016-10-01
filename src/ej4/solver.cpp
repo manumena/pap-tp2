@@ -29,7 +29,7 @@ vector<bool> solve(adj_list& g, vector<query>& qs) {
     return result;
 }
 
-vector<size_t> kosaraju(adj_list& g) {
+vector<scc_id> kosaraju(adj_list& g) {
     size_t n = g.size();
 
     /* Sequence vertices in decreasing finishing-time order */
@@ -51,11 +51,11 @@ vector<size_t> kosaraju(adj_list& g) {
 
     /* Discover SCCs */
     vector<scc_id> result(n);
-    size_t scc_id = 0;
+    scc_id id = 0;
     dfs (
         g_t,
-        [&result, &scc_id] (v_id v) { result[v] = scc_id; }, // assign vertex to current SCC being explored
-        [&scc_id] () { scc_id++; } // increment ID for next SCC to be explored
+        [&result, &id] (v_id v) { result[v] = id; }, // assign vertex to current SCC being explored
+        [&id] () { id++; } // increment ID for next SCC to be explored
     );
 
     return result;
@@ -71,7 +71,7 @@ vector<size_t> kosaraju(adj_list& g) {
 template <class VertexClosingCallable, class TreeClosingCallable>
 void dfs(adj_list& g, VertexClosingCallable close_vertex, TreeClosingCallable close_tree) {
     vector<bool> black(g.size());
-    for (size_t v = 0; v < black.size(); ++v) {
+    for (v_id v = 0; v < black.size(); ++v) {
         if (!black[v]) {
             dfs_single_tree(g, v, black, close_vertex);
             close_tree();
@@ -80,7 +80,7 @@ void dfs(adj_list& g, VertexClosingCallable close_vertex, TreeClosingCallable cl
 }
 
 template <class VertexClosingCallable>
-void dfs_single_tree(adj_list& g, int root, vector<bool>& black, VertexClosingCallable close_vertex) {
+void dfs_single_tree(adj_list& g, v_id root, vector<bool>& black, VertexClosingCallable close_vertex) {
     vector<bool> gray(g.size(), false);
     stack<v_id> s;
 

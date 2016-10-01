@@ -30,7 +30,7 @@ template <class ClosingBehavior, class ForestingBehavior>
 void dfs(adj_list&, ClosingBehavior, ForestingBehavior);
 
 template <class ClosingBehavior>
-void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingBehavior close);
+void dfs_single_tree(adj_list& g, v_id root, vector<bool>& black, ClosingBehavior close);
 
 /*************/
 
