@@ -1,0 +1,1 @@
+Un solo supernodo con máxima cantidad de aristas. Se pregunta por pares de nodos distintos, todos deben dar S.

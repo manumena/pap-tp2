@@ -1,0 +1,1 @@
+Varios supernodos aislados, ningún nodo aislado. Se pregunta por nodos de un mismo supernodo (debe dar S), nodos idénticos (debe dar S) y nodos de distintos supernodos (debería dar N).

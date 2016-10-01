@@ -1,0 +1,1 @@
+Varios supernodos aislados que son nodos aislados. Se pregunta por aulas idénticas (respuesta S) y por aulas distintas (respuesta N).

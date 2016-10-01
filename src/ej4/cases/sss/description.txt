@@ -1,0 +1,1 @@
+Un solo supernodo con mínima cantidad de aristas, es decir, un ciclo dirigido. Se pregunta por un nodo consigo mismo  y pares de nodos distintos. Todos deben dar S.

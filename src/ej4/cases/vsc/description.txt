@@ -1,0 +1,1 @@
+Varios supernodos conectados. Se pregunta por nodos de un mismo supernodo (debe dar S), y de pares de nodos tales que no existe forma de alcanzar a uno desde el otro (N), tales que se puede ir y no volver (N) y tales que se puede volver pero no ir (N).
