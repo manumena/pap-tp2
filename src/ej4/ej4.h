@@ -38,7 +38,11 @@ void run_solver();
 /*************/
 
 /* For Input*/
-adj_list read_graph();
-vector<query> read_queries();
+adj_list read_graph(istream&);
+vector<query> read_queries(istream&);
+vector<bool> read_results(istream&);
+/*************/
+
+/* For Testing */
 
 #endif // PAP_TP2_EJ4_H

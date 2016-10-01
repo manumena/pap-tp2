@@ -109,31 +109,31 @@ void dfs_single_tree(adj_list& g, int root, vector<bool>& black, ClosingCallable
 
 /* Input processing */
 
-adj_list read_graph() {
+adj_list read_graph(istream& is) {
     size_t a, p;
     int v1, v2;
 
-    cin >> a >> p;
+    is >> a >> p;
     adj_list g(a); // adjacency list
 
     for (size_t i = 0; i < p; i++) {
-        cin >> v1 >> v2;
+        is >> v1 >> v2;
         g[v1-1].push_back(v2-1);
     }
     return g;
 }
 
-vector<query> read_queries() {
+vector<query> read_queries(istream& is) {
     size_t q;
     int f, t;
     query qry;
 
-    cin >> q;
+    is >> q;
 
     vector<query> qs(q); // queries
 
     for (size_t i = 0; i < q; i++) {
-        cin >> f >> t;
+        is >> f >> t;
         qry.origin = f-1;
         qry.destination = t-1;
         qs[i] = qry;
