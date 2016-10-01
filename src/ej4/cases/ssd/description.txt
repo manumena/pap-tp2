@@ -1,1 +1,2 @@
-Un solo supernodo con máxima cantidad de aristas. Se pregunta por pares de nodos distintos, todos deben dar S.
+Un solo supernodo con máxima cantidad de aristas, incluyendo aristas "bidireccionales" (del tipo a1 b1, b1 a1).
+Se pregunta por pares de nodos distintos, todos deben dar S.
