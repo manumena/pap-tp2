@@ -26,6 +26,48 @@ En conclusión, en la primera etapa nos bastará con construir en tiempo lineal,
 
 \subsubsection{Algoritmo}
 
+La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece.
+
+\bigskip
+
+\begin{algorithm}[H]
+	\caption{Kosaraju}
+	\Input{$G$: grafo dirigido representado con listas de adyacencia}
+    \Output{$M$: mapa $\langle v\_id, scc\_id \rangle$ }
+
+    $\mathit{secuenciaDeCierre} \gets$ vértices en orden decreciente de cierre corriendo DFS sobre G \;
+
+    $\mathit{G^T} \gets$ grafo traspuesto de G computado mediante un DFS sobre G \;
+
+    $\mathit{M} \gets \mathit{mapearVerticesConSCCs(G^T)}$
+
+    \Return{$M$}
+\end{algorithm}
+
+\bigskip
+
+\begin{algorithm}[H]
+    \caption{mapearVerticesConSCCs}
+    \Input{$G$: grafo dirigido representado con listas de adyacencia}
+    \Output{$M$: mapa $\langle v\_id, scc\_id \rangle$ }
+
+    $\mathit{mapeado} \gets$ mapa $\langle v\_id, bool \rangle$ que se inicializa asociando cada vértice de G a false\;
+
+    $id \gets$ obtenerIdUnicoDeSCC()
+    \For {$v$ en $V(G)$} {
+        \If {el valor de  $v$ en $mapeados$ es falso} {
+            Explorar mediante un $DFS$ sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
+            $id \gets obtenerIdUnicoDeSCC()$ \;
+        }
+    }
+
+    \Return{$M$}
+\end{algorithm}
+
+\medskip
+
+siendo $obtenerIdUnicoDeSCC()$ una función que provee valores únicos de tipo $scc\_id$ con cada invocación en tiempo constante.
+
 \subsubsection{Detalles de implementación}
 
 \textit{\textbf{Todo lo de los DFSs.}}
