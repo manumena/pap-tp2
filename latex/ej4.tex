@@ -2,9 +2,13 @@
 
 \subsection{Problema y modelo}
 
-El problema plantea un escenario en el que se tienen aulas y pasillos que las conectan, permitiendo estos pasillos el recorrido por ellos en un solo sentido cada uno, no habiendo ningún pasillo que conecte un aula consigo misma ni un par de pasillos que conecten dos aulas en el mismo sentido. Así, una instancia del problema puede modelarse mediante un grafo dirigido cuyos vértices representan las aulas y en el que hay un eje dirigido por cada pasillo, sin \textit{multiejes} (varios ejes que conecten dos vértices en un mismo sentido) ni \textit{bucles} (ejes que conecten a un vértice consigo mismo).
+El problema plantea un escenario en el que se tienen aulas y pasillos que las conectan, permitiendo estos pasillos el recorrido en un solo sentido cada uno, no habiendo ningún pasillo que conecte un aula consigo misma ni un par de pasillos que conecten dos aulas en el mismo sentido. Esto puede modelarse mediante un grafo dirigido cuyos vértices representan las aulas y en el que hay un eje dirigido por cada pasillo, sin \textit{multiejes} (varios ejes que conecten dos vértices en un mismo sentido) ni \textit{bucles} (ejes que conecten a un vértice consigo mismo).
 
-El problema pide evaluar cierta cantidad de consultas (de ahora en más \textit{consultas de circulación}), cada una consistiendo en un par ordenado de aulas $a$ y $b$ (notación $\langle a,b \rangle$), debiendo la solución responder para cada uno si es posible recorrer los pasillos dados de modo de partir de $a$, pasar por $b$ y volver a $a$. En nuestro modelo, esto equivale a detectar si existe un camino dirigido entre $a$ y $b$ y otro entre $b$ y $a$ en el grafo inducido por la instancia en cuestión.
+En el problema interesa evaluar las posibilidades de poder circular las aulas ante la necesidad de evacuar la estructura en la que se encuentran, y para ello se requiere la capacidad de evaluar cierta cantidad de consultas (de ahora en más \textit{consultas de circulación}), cada una consistiendo en un par ordenado de aulas $a$ y $b$ (notación $\langle a,b \rangle$). La solución debe poder responder para cada una si es posible recorrer los pasillos dados de modo de partir de $a$, pasar por $b$ y volver a $a$, lo cual le permitiría a personas en $a$ ir al aula $b$ para avisar de la necesidad de evacuar y volver a $a$ para recuperar sus pertenencias. En nuestro modelo, esto equivale a detectar si existe un camino dirigido entre $a$ y $b$ y otro entre $b$ y $a$ en el grafo inducido por la instancia en cuestión (también \textit{grafo de aulas y pasillos}).
+
+Naturalmente, dada la motivación del problema que presenta el enunciado, es imperativo que las personas que circulen entre las aulas puedan luego llegar a la salida de la estructura. Como el enunciado aclara que desde cualquier aula se puede alcanzar de alguna manera esa salida, no modelaremos esa parte del problema y nos concentraremos únicamente en lo relativo a la circulación mencionada entre pares de aulas.
+
+Consideraremos que una consulta $\langle a,a \rangle$ siempre tiene respuesta positiva, ya que una persona en un aula determinada es capaz de alertar a los del mismo aula de la necesidad de evacuar y también de retirar sus pertenencias de ese aula.
 
 \subsection{Solución}
 
@@ -14,10 +18,10 @@ Abordaremos la solución en dos etapas. En la primera, buscaremos procesar el gr
 
 Entonces, para la primera etapa, nos interesa encontrar una forma de reducir la información del grafo a una estructura que resuma las posibilidades de circulación entre las distintas aulas. Concretamente, queremos poder determinar si, para un par ordenado de aulas arbitrario, es posible ir de la primera a la segunda y volver.
 
-En relación a esto, observemos que:
+Dado un grafo de aulas y pasillos, en relación a esto observemos que:
 \begin{itemize}
-    \item Si un par de aulas está en una misma componente fuertemente conexa, es posible ir de cualquiera de ellas a la otra y luego volver.
-    \item Si es posible ir de un aula a otra y volver, este par de aulas conforma un subgrafo fuertemente conexo que por ende es subgrafo de alguna componente fuertemente conexa del grafo \textit{\textbf{(¿hace falta explicar más de por qué eso vale?)}}.
+    \item Si un par de aulas está en una misma componente fuertemente conexa del grafo, es posible ir de cualquiera de ellas a la otra y luego volver.
+    \item Si es posible ir de un aula a otra y volver, este par de aulas conforma un subgrafo fuertemente conexo que por ende es subgrafo de alguna componente fuertemente conexa del grafo.
 \end{itemize}
 
 Esta última observación establece una equivalencia entre la positividad de la respuesta correcta a una consulta de circulación y la pertenencia de las aulas involucradas en ella a una misma componente fuertemente conexa del grafo de aulas y pasillos. De esta forma, la respuesta a la consulta $\langle a,b \rangle$ debe ser positiva si $a$ y $b$ pertenecen a la misma componente conexa y negativa si no.
@@ -26,13 +30,13 @@ En conclusión, en la primera etapa nos bastará con construir en tiempo lineal,
 
 \subsubsection{Algoritmo}
 
-La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece.
+La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece. Los mapas utilizados en nuestro algoritmo se consideran siempre de construcción en tiempo lineal en su cantidad de claves y de consulta y actualización en tiempo constante. Por su parte, los grafos se representan mediante listas de adyaencia que identifican los vértices por valores únicos de $v\_id$.
 
 \bigskip
 
 \begin{algorithm}[H]
 	\caption{Kosaraju}
-	\Input{$G$: grafo dirigido representado con listas de adyacencia}
+	\Input{$G$: grafo dirigido}
     \Output{$M$: mapa $\langle v\_id, scc\_id \rangle$ }
 
     $\mathit{secuenciaDeCierre} \gets$ vértices en orden decreciente de cierre corriendo DFS sobre G \;
@@ -48,15 +52,15 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
 
 \begin{algorithm}[H]
     \caption{mapearVerticesConSCCs}
-    \Input{$G$: grafo dirigido representado con listas de adyacencia}
+    \Input{$G$: grafo dirigido}
     \Output{$M$: mapa $\langle v\_id, scc\_id \rangle$ }
 
-    $\mathit{mapeado} \gets$ mapa $\langle v\_id, bool \rangle$ que se inicializa asociando cada vértice de G a false\;
+    $\mathit{mapeado} \gets$ mapa $\langle v\_id, bool \rangle$ que se inicializa asociando cada vértice de G a \textit{false}\;
 
-    $id \gets$ obtenerIdUnicoDeSCC()
+    $id \gets$ obtenerIdUnicoDeSCC() \;
     \For {$v$ en $V(G)$} {
         \If {el valor de  $v$ en $mapeados$ es falso} {
-            Explorar mediante un $DFS$ sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
+            Explorar mediante $DFS$ sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
             $id \gets obtenerIdUnicoDeSCC()$ \;
         }
     }
@@ -67,6 +71,31 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
 \medskip
 
 siendo $obtenerIdUnicoDeSCC()$ una función que provee valores únicos de tipo $scc\_id$ con cada invocación en tiempo constante.
+
+\medskip
+
+En la segunda etapa, queda sencillamente usar el mapa construido por Kosaraju para responder las consultas de circulación. El algoritmo completo, incluyendo la segunda etapa, es el siguiente.
+
+\bigskip
+
+\begin{algorithm}[H]
+	\caption{ResponderConsultas}
+	\Input{
+        $G$: grafo dirigido representado con listas de adyacencia $\mid$ $Q$: secuencia de consultas de circulación $\langle a, b \rangle$
+    }
+
+    $M \gets \mathit{Kosaraju(G)}$ \;
+
+    \For {$\langle a, b \rangle$ en $Q$} {
+        \If {$M$ en $a$ es igual a $M$ en $b$} {
+            responder afirmativamente a $\langle a, b \rangle$
+        } \Else {
+            responder negativamente a $\langle a, b \rangle$
+        }
+    }
+\end{algorithm}
+
+\subsubsection{Complejidad}
 
 \subsubsection{Detalles de implementación}
 
