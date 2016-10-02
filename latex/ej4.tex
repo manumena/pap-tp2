@@ -39,9 +39,9 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
 	\Input{$G$: grafo dirigido}
     \Output{$M$: mapa $\langle v\_id, scc\_id \rangle$ }
 
-    $\mathit{secuenciaDeCierre} \gets$ vértices en orden decreciente de cierre corriendo DFS sobre G \;
+    $\mathit{secuenciaDeCierre} \gets$ secuenciar los vértices en orden decreciente de cierre corriendo \textit{DFS} sobre G \;
 
-    $\mathit{G^T} \gets$ grafo traspuesto de G computado mediante un DFS sobre G \;
+    $\mathit{G^T} \gets$ trasponer $G$ mediante un \textit{DFS} (ver subsección sobre complejidad) \;
 
     $\mathit{M} \gets \mathit{mapearVerticesConSCCs(G^T)}$
 
@@ -60,7 +60,7 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
     $id \gets$ obtenerIdUnicoDeSCC() \;
     \For {$v$ en $V(G)$} {
         \If {el valor de  $v$ en $mapeados$ es falso} {
-            Explorar mediante $DFS$ sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
+            Explorar mediante \textit{DFS} sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
             $id \gets obtenerIdUnicoDeSCC()$ \;
         }
     }
@@ -97,6 +97,10 @@ En la segunda etapa, queda sencillamente usar el mapa construido por Kosaraju pa
 
 \subsubsection{Complejidad}
 
-\subsubsection{Detalles de implementación}
+Sea $G$ el grafo de aulas y pasillos de alguna instancia del problema con $Q$ consultas de circulación. Sea $A$ cantidad de vértices de $G$ y $P$ su cantidad de ejes.
 
-\textit{\textbf{Todo lo de los DFSs.}}
+En nuestra implementación de \textit{Kosaraju} (\textbf{Algoritmo 1)}), en la línea \texttt{1} se construye un vector de los vértices secuencialmente según el orden de finalización de los mismos en una exploración \textit{DFS}, de manera análoga a lo visto en clase. Por lo tanto, esta línea agrega un tiempo de $O(A+P)$. En la línea \texttt{2}, creamos el grafo traspuesto $G^T$ de $G$, corriendo sobre $G$ un \textit{DFS} que, en la etapa de cierre de cada vértice $v$, agrega en $G^T$ el eje $(w,v)$ por cada eje $(v,w)$ saliente de $v$. Es decir que, al cerrar cada vértice $v$, suma un costo de $O(out(v))$ siendo $out(v)$ el \textit{out-degree} de $v$. Por ende, los pasos de construcción de $G^T$ agregan al \textit{DFS} un costo total de $O(P)$, dado que cada vértice es cerrado exactamente una vez por el \textit{DFS} y $\sum\limits_{v \in V(G)} out(v) = P$, obteniendo un nuevo aporte de $O(A+P)$ operaciones. Por último, en la tercera línea es donde se explora $G^T$ mediante \textit{DFS} según el orden calculado en la primera línea. La única modificación al paso análogo de la versión del algoritmo dada en clase es el agregado en tiempo constante de cada vértice al mapa correspondiente en lugar de su impresión, con lo que alcanza para afirmar que el costo temporal es el mismo de $O(A+P)$. En conclusión, tenemos que este algoritmo tiene complejidad temporal $O(A+P)$.
+
+Finalmente, en el algoritmo completo que resuelve el problema (\textbf{Algoritmo 3}), tenemos una invocación a la implementación de \textit{Kosaraju} del \textbf{Algoritmo 1} de costo $O(A+P)$, y luego $Q$ iteraciones de respuesta a cada consulta en constante en base al mapa resultante de la corrida de \textit{Kosaraju}, dando en total una complejidad temporal de $O(A+P+Q)$.
+
+\subsubsection{Casos de prueba}
