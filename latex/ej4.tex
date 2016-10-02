@@ -104,3 +104,11 @@ En nuestra implementación de \textit{Kosaraju} (\textbf{Algoritmo 1)}), en la l
 Finalmente, en el algoritmo completo que resuelve el problema (\textbf{Algoritmo 3}), tenemos una invocación a la implementación de \textit{Kosaraju} del \textbf{Algoritmo 1} de costo $O(A+P)$, y luego $Q$ iteraciones de respuesta a cada consulta en constante en base al mapa resultante de la corrida de \textit{Kosaraju}, dando en total una complejidad temporal de $O(A+P+Q)$.
 
 \subsubsection{Casos de prueba}
+
+Se utilizaron instancias de prueba generadas manualmente que corresponden a las siguientes familias de instancias:
+
+\begin{itemize}
+    \item Grafos con una sola componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$.
+    \item Grafos con distintas componentes fuertemente conexas desconectadas entre sí, con cantidades de vértices mayores o iguales a 1, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$.
+    \item Grafos con distintas componentes conexas conectadas entre sí, consultando por distintos pares $\langle a, b \rangle$ tales que $a$ y $b$ corresponden a la misma componente, tales que $a$ y $b$ pertenecen a distintas componentes y se puede ir de $a$ a $b$ pero no volver, y tales que $a$ y $b$ pertenecen a distintas componentes y se puede volver de $b$ a $a$ pero no ir.
+    \item Grafos generados aleatoriamente con varias componentes fuertemente conexas tanto conecatadas entre sí como no, de dimensiones cercanas a las cotas propuestas para el testeo en el enunciado para corroborar el funcionamiento correcto de la implementación ante la mayor carga de datos.
