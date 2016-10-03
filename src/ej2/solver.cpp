@@ -42,11 +42,31 @@ vector<vector<network_edge>> build_network(const vector<vector<int>>& stock_valu
 	return network_graph;
 }
 
+void update_network_edge(vector<vector<network_edge>>& network_graph, const int src, const int dst) {
+	// use full capacity
+	network_graph[src][dst].capacity = 0;
+
+	// add capacity to edge going in opposite direction
+	unsigned int i = 0;
+	while (i < network_graph[dst].size() &&
+			network_graph[dst][i].dst != src) {
+		i++;
+	}
+
+	if (i == network_graph[dst].size()) {
+		network_graph[dst].push_back(network_edge(dst, src, 1));
+	}
+	else {
+		network_graph[dst][i].capacity = 1;
+	}
+}
+
 int find_max_flow(vector<vector<network_edge>> network_graph, const int stock_count) {
 	bool sink_reachable = true;
 	int max_flow = 0;
 	stack<int> nodes_to_visit;
 	vector<pair<int, int>> flow(2*stock_count + 2, pair<int, int>());
+	vector<bool> visited(2*stock_count + 2, false);
 	int current_node;
 
 	// as long as there is an augmented path from source to sink
@@ -54,6 +74,7 @@ int find_max_flow(vector<vector<network_edge>> network_graph, const int stock_co
 		sink_reachable = false;
 		// start from the source
 		nodes_to_visit.push(2*stock_count);
+		visited[2*stock_count] = true;
 		while (!nodes_to_visit.empty()) {
 			current_node = nodes_to_visit.top();
 			if (current_node == 2*stock_count + 1) {
@@ -61,18 +82,23 @@ int find_max_flow(vector<vector<network_edge>> network_graph, const int stock_co
 				sink_reachable = true;
 				pair<int, int> flow_edge = flow[2*stock_count + 1];
 				while (flow_edge.first != 2*stock_count) {
-					network_graph[flow_edge.first][flow_edge.second].capacity = 0;
+					update_network_edge(network_graph, flow_edge.first, flow_edge.second);
 					flow_edge = flow[flow_edge.first];
 				}
-				network_graph[flow_edge.first][flow_edge.second].capacity = 0;
+				update_network_edge(network_graph, flow_edge.first, flow_edge.second);
+
 				max_flow++;
+				// reset depth first search variables
 				nodes_to_visit = stack<int>();
+				visited = vector<bool>(2*stock_count + 2, false);
 			}
 			else {
 				// otherwise, we continue searching for a path to the sink
 				nodes_to_visit.pop();
 				for (unsigned int i = 0; i < network_graph[current_node].size(); i++) {
-					if (network_graph[current_node][i].capacity > 0) {
+					if (network_graph[current_node][i].capacity > 0 && !visited[network_graph[current_node][i].dst]) {
+						// if the edge has capacity and dst hasn't been visited
+						visited[network_graph[current_node][i].dst] = true;
 						flow[network_graph[current_node][i].dst] = make_pair(current_node, i);
 						nodes_to_visit.push(network_graph[current_node][i].dst);
 					}
