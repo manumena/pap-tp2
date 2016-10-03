@@ -32,9 +32,39 @@ vector<bool> read_results(istream& is) {
     return result;
 }
 
+// tests an instance with a directed circuit of size LTEST_MAX_A and LTEST_MAX_Q queries
+// being the graph entirely strongly connected, all queries respnoses should be positive
+void random_load_test() {
+    size_t A = LTEST_MAX_A;
+    size_t Q = LTEST_MAX_Q;
+
+    adj_list g(A);
+    vector<query> qs;
+    qs.reserve(Q);
+
+    for (size_t i = 0; i < A-1; ++i)
+        g.at(i).push_back(i+1);
+    g.at(A-1).push_back(0);
+
+
+    unordered_set<pair<v_id, v_id>, pairhash> all_pairs;
+    for (size_t i = 0; i < A-1; ++i) {
+        for (size_t j = i+1; j < A; ++j) {
+            qs.push_back({i,j});
+            if (qs.size() >= Q) break;
+        }
+        if (qs.size() >= Q) break;
+    }
+
+    vector<bool> obtained = solve(g, qs);
+
+    // all values in obtained should be true
+    ASSERT(accumulate(obtained.cbegin(), obtained.cend(), true, [](bool a, bool b) {return a && b;}));
+}
+
 void run_unit_tests() {
     for (test_case_input& c : cases_filenames) {
-        auto run_case = [&c] () {
+        auto file_case = [&c] () {
             ifstream input_file(c.input_filename);
             ifstream expected_file(c.expected_filename);
 
@@ -45,6 +75,8 @@ void run_unit_tests() {
 
             ASSERT(obtained == read_results(expected_file));
         };
-        RUN_TEST (run_case);
+        RUN_TEST(file_case);
     }
+
+    RUN_TEST(random_load_test);
 }

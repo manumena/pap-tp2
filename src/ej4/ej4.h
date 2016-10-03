@@ -6,6 +6,9 @@
 #include <stack>
 #include <algorithm>
 #include <utility>
+#include <functional>
+#include <unordered_set>
+#include <numeric>
 
 using namespace std;
 
@@ -48,9 +51,21 @@ vector<bool> read_results(istream&);
 
 /* For Testing */
 
+#define LTEST_MAX_A 10000
+#define LTEST_MAX_P 100000
+#define LTEST_MAX_Q 100000
+
 struct test_case_input {
     string input_filename;
     string expected_filename;
+};
+
+struct pairhash {
+public:
+    template <typename T, typename U>
+    size_t operator()(const pair<T, U> &x) const {
+        return hash<T>()(x.first) ^ hash<U>()(x.second);
+    }
 };
 
 #endif // PAP_TP2_EJ4_H
