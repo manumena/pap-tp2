@@ -13,7 +13,8 @@ vector<test_case_input> cases_filenames = {
     {CASE_DIR + "sss/sss.dat", CASE_DIR + "sss/sss.out"},
     {CASE_DIR + "vsc/vsc.dat", CASE_DIR + "vsc/vsc.out"},
     {CASE_DIR + "vsdc/vsdc.dat", CASE_DIR + "vsdc/vsdc.out"},
-    {CASE_DIR + "vsdd/vsdd.dat", CASE_DIR + "vsdd/vsdd.out"}
+    {CASE_DIR + "vsdd/vsdd.dat", CASE_DIR + "vsdd/vsdd.out"},
+    {CASE_DIR + "nsccs/nsccs.dat", CASE_DIR + "nsccs/nsccs.out"}
 };
 
 vector<bool> read_results(istream& is) {
