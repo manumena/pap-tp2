@@ -34,7 +34,7 @@ vector<bool> read_results(istream& is) {
 
 // tests an instance with a directed circuit of size LTEST_MAX_A and LTEST_MAX_Q queries
 // being the graph entirely strongly connected, all queries respnoses should be positive
-void random_load_test() {
+void load_test() {
     size_t A = LTEST_MAX_A;
     size_t Q = LTEST_MAX_Q;
 
@@ -78,5 +78,5 @@ void run_unit_tests() {
         RUN_TEST(file_case);
     }
 
-    RUN_TEST(random_load_test);
+    RUN_TEST(load_test);
 }
