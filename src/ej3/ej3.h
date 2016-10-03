@@ -7,6 +7,8 @@
 **  Exercise 3
 */
 
+using namespace std;
+
 // Here go declarations of functions which are exported by the problem solver,
 // global variables, etc.
 
