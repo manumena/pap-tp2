@@ -23,4 +23,6 @@ struct network_edge {
 	}
 };
 
+int min_plots(const std::vector<std::vector<int>>& stock_value_matrix, const int stock_count, const int day_count);
+
 #endif // PAP_TP2_EJ2_H
