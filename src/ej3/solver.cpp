@@ -70,10 +70,17 @@ vector<int> depth;
 vector<int> low;
 vector<bool> articulation_point;
 vector<bool> bridge;
+vector<int> bridge_component_of_node;
+vector<int> bridge_component_nodes;
 stack<Edge> pila;
 
 void extract_biconnected_component(int v, int w) {
-
+	while (pila.top() != Edge(v, w) && pila.top() != Edge(w, v)) {
+		cout << pila.top().first << "-" << pila.top().second << ", ";
+		pila.pop();
+	}
+	cout << pila.top().first << "-" << pila.top().second << endl;
+	pila.pop();
 }
 
 void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
@@ -111,6 +118,38 @@ void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
 	}
 }
 
+void calculate_bridge_components(Graph& grafo, int v, int component) {
+	bridge_component_of_node[v] = component;
+	++bridge_component_nodes[component];
+	for (list< pair<int, int> >::iterator it = grafo.adjacency[v].begin(); it != grafo.adjacency[v].end(); ++it) {
+		pair<int, int> c = *it;
+		int e = c.first;
+		int w = c.second;
+		if (bridge_component_of_node[w] == -1) {
+			if (bridge[e]) {
+				calculate_bridge_components(grafo, w, component+1);
+			} else {
+				calculate_bridge_components(grafo, w, component);
+			}
+		}
+	}
+}
+
+// void solve_query(int i) {
+// 	Query query = queries[i];
+// 	switch (query.type) {
+// 		case A:
+
+// 			break;
+// 		case B:
+// 			cout << bridge[i] << endl;
+// 			break;
+// 		case C:
+
+// 			break;
+// 	}
+// }
+
 void run_solver() {
 	//Graph input
 	int N,M;
@@ -134,12 +173,25 @@ void run_solver() {
 	low = vector<int>(grafo.N, -1);
 	articulation_point = vector<bool>(grafo.N, false);
 	bridge = vector<bool>(grafo.M, false);
+	bridge_component_of_node = vector<int>(grafo.N, -1);
+	bridge_component_nodes = vector<int>(grafo.N, 0);
 	pila = stack<Edge>();
 	calculate_biconnected_components(grafo, 0, 0, 0);
+	calculate_bridge_components(grafo, 0, 0);
 
-	cout << endl;
-	cout << depth << endl;
-	cout << low << endl;
-	cout << articulation_point << endl;
-	cout << bridge << endl;
+	// cout << endl;
+	// cout << depth << endl;
+	// cout << low << endl;
+	// cout << articulation_point << endl;
+	// cout << bridge << endl;
+
+	cout << endl << "[";
+	for (int i = 0; i < N; ++i) {
+		cout << bridge_component_nodes[bridge_component_of_node[i]] << ", ";
+	}
+	cout << "]" << endl;
+
+	//Handle queries
+	// for (int i = 0; i < Q; ++i)
+	// 	solve_query(i);
 }
