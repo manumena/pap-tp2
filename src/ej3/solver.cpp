@@ -72,6 +72,7 @@ vector<bool> articulation_point;
 vector<bool> bridge;
 vector<int> bridge_component_of_node;
 vector<int> bridge_component_nodes;
+int bridge_component_counter = 0;
 // stack<Edge> pila;
 
 // void extract_biconnected_component(int v, int w) {
@@ -118,8 +119,6 @@ void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
 	}
 }
 
-int component_counter = 0;
-
 void calculate_bridge_components(Graph& grafo, int v, int component) {
 	bridge_component_of_node[v] = component;
 	++bridge_component_nodes[component];
@@ -129,13 +128,32 @@ void calculate_bridge_components(Graph& grafo, int v, int component) {
 		int w = c.second;
 		if (bridge_component_of_node[w] == -1) {
 			if (bridge[e]) {
-				++component_counter;
-				calculate_bridge_components(grafo, w, component_counter);
+				++bridge_component_counter;
+				calculate_bridge_components(grafo, w, bridge_component_counter);
 			} else {
 				calculate_bridge_components(grafo, w, component);
 			}
 		}
 	}
+}
+
+int bridges_between_nodes(int e1, int e2, int current, Graph& grafo, vector<bool>& aux_visited) {
+	aux_visited[current] = true;
+	if (current == e2)
+		return 0;
+	int ans = -1;
+	for (list< pair<int, int> >::iterator it = grafo.adjacency[current].begin(); it != grafo.adjacency[current].end(); ++it) {
+		pair<int, int> c = *it;
+		int e = c.first;
+		int w = c.second;
+		if (!aux_visited[w]) {
+			int rec = bridges_between_nodes(e1, e2, w, grafo, aux_visited);
+			if (rec != -1) {
+				ans = bridge[e] ? rec+1 : rec;
+			}
+		}
+	}
+	return ans;
 }
 
 // void solve_query(int i) {
@@ -193,6 +211,16 @@ void run_solver() {
 	// 	cout << bridge_component_nodes[bridge_component_of_node[i]] << ", ";
 	// }
 	// cout << "]" << endl;
+
+	vector<bool> aux_visited;
+	aux_visited = vector<bool>(grafo.N, false);
+	cout << bridges_between_nodes(0, 8, 0, grafo, aux_visited) << endl;
+	aux_visited = vector<bool>(grafo.N, false);
+	cout << bridges_between_nodes(0, 4, 0, grafo, aux_visited) << endl;
+	aux_visited = vector<bool>(grafo.N, false);
+	cout << bridges_between_nodes(2, 4, 2, grafo, aux_visited) << endl;
+	aux_visited = vector<bool>(grafo.N, false);
+	cout << bridges_between_nodes(4, 9, 4, grafo, aux_visited) << endl;
 
 	//Handle queries
 	// for (int i = 0; i < Q; ++i)
