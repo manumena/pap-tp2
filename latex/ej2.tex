@@ -1,1 +1,74 @@
 \section{Ejercicio 2}
+
+\subsection{Introducción}
+
+El objetivo de este problema era dado un número $A$ de acciones con sus valores
+en el transcurdo de $D$ días devolver el mínimo número de gráficos necesarios
+para graficarlas sin que hubiera intersecciones entre las visualizaciones de las
+mismas.
+
+\subsubsection{Solución propuesta}
+
+La resolución de este ejercicio cuenta con varias etapas. La primera consistió
+en modelar la entrada de forma tal que fuera posible visualizar en otros
+términos el problema a resolver.
+
+Para esto se decidió representar las acciones mediante un grafo acíclico
+dirigido. El modo de construirlo fue el siguiente:
+
+\begin{itemize}
+	\item{Cada acción es representada mediante un vértice.}
+	\item{Un arco saliendo de una acción $A_j$ a $A_k$ implica que el valor de
+	la acción $A_j$ se encuentra acotado superiormente por el de $A_k$ en todo
+	momento.}
+\end{itemize}
+
+Se puede ver fácilmente que no habrá ciclos puesto que ello implicaría que el
+valor de una acción acota superior e inferiormente el de otra, lo cual sería
+un absurdo.
+
+A modo de ejemple se presenta a continuación una posible entrada con su
+respectiva representación en el modelo propuesto.
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\begin{table}[H]
+	\caption{Ejemplo de entrada con $A = 5$ y $D = 3$.} \label{ej2:tab1}
+	\centering
+	\begin{tabular}{|c|M{2em}|M{2em}|M{2em}|}
+		\hline
+		\multirow{2}{4em}{\centering Acción} & \multicolumn{3}{c|}{Valor en día $i$} \\
+		\cline{2-4}
+		  & 0 & 1 & 2 \\
+		\hline
+		\hline
+		A & 0 & 0 & 0 \\
+		\hline
+		B & 2 & 2 & 2 \\
+		\hline
+		C & 3 & 3 & 3 \\
+		\hline
+		D & 1 & 2 & 0 \\
+		\hline
+		E & 0 & 2 & 4 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\caption{Grafo acíclico dirigido para el Cuadro \ref{ej2:tab1}.}
+	\centering
+	\begin{tikzpicture}
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal]
+		\tikzset{EdgeStyle/.style={->}}
+		\Vertex{A}
+		\EA(A){B}
+		\EA(B){C}
+		\SO(A){E}
+		\SO(B){D}
+		\Edge(A)(B)
+		\Edge(B)(C)
+		\Edge[style={bend right=45}](D)(C)
+	\end{tikzpicture}
+\end{figure}
