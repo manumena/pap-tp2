@@ -71,7 +71,7 @@ public:
 
 // --------------- Functions ----------------
 
-void calculate_biconnected_components(Graph& graph, int v, int d, int parent);
+void calculate_bridges(Graph& graph, int v, int d, int parent);
 void calculate_bridge_components(Graph& graph, int v, int component);
 int bridges_between_nodes(int src, int dst, int current, Graph& graph, vector<bool>& aux_visited);
 void solve_query(Query& query, Graph& graph);

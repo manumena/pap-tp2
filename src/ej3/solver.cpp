@@ -9,7 +9,6 @@
 
 vector<int> depth;
 vector<int> low;
-vector<bool> articulation_point;
 vector<bool> bridge;
 vector<int> bridge_component_of_node;
 vector<int> bridge_component_nodes;
@@ -32,13 +31,12 @@ void run_solver() {
 	//Global variable initializers
 	depth = vector<int>(graph.N, -1);
 	low = vector<int>(graph.N, -1);
-	articulation_point = vector<bool>(graph.N, false);
 	bridge = vector<bool>(graph.M, false);
 	bridge_component_of_node = vector<int>(graph.N, -1);
 	bridge_component_nodes = vector<int>(graph.N, 0);
 
 	//Main DFS
-	calculate_biconnected_components(graph, 0, 0, 0);
+	calculate_bridges(graph, 0, 0, 0);
 	calculate_bridge_components(graph, 0, 0);
 
 	//Handle queries
@@ -46,22 +44,17 @@ void run_solver() {
 		solve_query(queries[i], graph);
 }
 
-void calculate_biconnected_components(Graph& graph, int v, int d, int parent) {
+void calculate_bridges(Graph& graph, int v, int d, int parent) {
 	depth[v] = d;
 	low[v] = d;
-	int children = 0;
 	for (list< pair<int, int> >::iterator it = graph.adjacency[v].begin(); it != graph.adjacency[v].end(); ++it) {
 		pair<int, int> c = *it;
 		int e = c.first;
 		int w = c.second;
 		if (w != parent) {
 			if (depth[w] == -1) {
-				++children;
-				calculate_biconnected_components(graph, w, d+1, v);
+				calculate_bridges(graph, w, d+1, v);
 				low[v] = min(low[v], low[w]);
-				if ((v != parent && low[w] >= depth[v]) || (v == parent && children > 1)) {
-					articulation_point[v] = true;
-				}
 				if (low[w] >= depth[w]) {
 					bridge[e] = true;
 				}
