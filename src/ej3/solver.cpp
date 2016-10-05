@@ -44,27 +44,21 @@ public:
 istream& operator>>(istream& i, Query& q) {
 	char t;
 	i >> t;
-	switch (t) {
-		case 'A':
-			i >> q.e1; q.e1--;
-			i >> q.e2; q.e2--;
-			q.type = A;
-			break;
-		case 'B':
-			i >> q.c; q.c--;
-			q.type = B;
-			break;
-		case 'C':
-			i >> q.e1;  q.e1--;
-			q.type = C;
-			break;
+	if (t == 'A') {
+		i >> q.e1; q.e1--;
+		i >> q.e2; q.e2--;
+		q.type = A;
+	} else if (t == 'B') {
+		i >> q.c; q.c--;
+		q.type = B;
+	} else if (t == 'C') {
+		i >> q.e1; q.e1--;
+		q.type = C;
 	}
 	return i;
 }
 
 // ---------------- Code ---------------- 
-
-typedef pair<int, int> Edge;
 
 vector<int> depth;
 vector<int> low;
@@ -73,23 +67,10 @@ vector<bool> bridge;
 vector<int> bridge_component_of_node;
 vector<int> bridge_component_nodes;
 int bridge_component_counter = 0;
-// stack<Edge> pila;
-
-// void extract_biconnected_component(int v, int w) {
-// 	while (pila.top() != Edge(v, w) && pila.top() != Edge(w, v)) {
-// 		cout << pila.top().first << "-" << pila.top().second << ", ";
-// 		pila.pop();
-// 	}
-// 	cout << pila.top().first << "-" << pila.top().second << endl;
-// 	pila.pop();
-// }
 
 void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
 	depth[v] = d;
 	low[v] = d;
-	// if (v != parent) {
-	// 	pila.push(Edge(parent, v));
-	// }
 	int children = 0;
 	for (list< pair<int, int> >::iterator it = grafo.adjacency[v].begin(); it != grafo.adjacency[v].end(); ++it) {
 		pair<int, int> c = *it;
@@ -100,9 +81,6 @@ void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
 				++children;
 				calculate_biconnected_components(grafo, w, d+1, v);
 				low[v] = min(low[v], low[w]);
-				// if (low[w] >= depth[v]) {
-				// 	extract_biconnected_component(v, w);
-				// }
 				if ((v != parent && low[w] >= depth[v]) || (v == parent && children > 1)) {
 					articulation_point[v] = true;
 				}
@@ -110,10 +88,7 @@ void calculate_biconnected_components(Graph& grafo, int v, int d, int parent) {
 					bridge[e] = true;
 				}
 			} else {
-				if (depth[w] < low[v]) {
-					// pila.push(Edge(w, v));
-					low[v] = depth[w];
-				}
+				low[v] = min(low[v], depth[w]);
 			}
 		}
 	}
@@ -137,9 +112,9 @@ void calculate_bridge_components(Graph& grafo, int v, int component) {
 	}
 }
 
-int bridges_between_nodes(int e1, int e2, int current, Graph& grafo, vector<bool>& aux_visited) {
+int bridges_between_nodes(int src, int dst, int current, Graph& grafo, vector<bool>& aux_visited) {
 	aux_visited[current] = true;
-	if (current == e2)
+	if (current == dst)
 		return 0;
 	int ans = -1;
 	for (list< pair<int, int> >::iterator it = grafo.adjacency[current].begin(); it != grafo.adjacency[current].end(); ++it) {
@@ -147,7 +122,7 @@ int bridges_between_nodes(int e1, int e2, int current, Graph& grafo, vector<bool
 		int e = c.first;
 		int w = c.second;
 		if (!aux_visited[w]) {
-			int rec = bridges_between_nodes(e1, e2, w, grafo, aux_visited);
+			int rec = bridges_between_nodes(src, dst, w, grafo, aux_visited);
 			if (rec != -1) {
 				ans = bridge[e] ? rec+1 : rec;
 			}
@@ -156,20 +131,18 @@ int bridges_between_nodes(int e1, int e2, int current, Graph& grafo, vector<bool
 	return ans;
 }
 
-// void solve_query(int i) {
-// 	Query query = queries[i];
-// 	switch (query.type) {
-// 		case A:
-
-// 			break;
-// 		case B:
-// 			cout << bridge[i] << endl;
-// 			break;
-// 		case C:
-
-// 			break;
-// 	}
-// }
+void solve_query(Query& query, Graph& grafo) {
+	int ans = 0;
+	if (query.type == A) {
+		vector<bool> aux_visited = vector<bool>(grafo.N, false);
+		ans = bridges_between_nodes(query.e1, query.e2, query.e1, grafo, aux_visited);
+	} else if (query.type == B) {
+		ans = bridge[query.c] ? 1 : 0;
+	} else if (query.type == C) {
+		ans = bridge_component_nodes[bridge_component_of_node[query.e1]] - 1;
+	}
+	cout << ans << endl;
+}
 
 void run_solver() {
 	//Graph input
@@ -189,40 +162,19 @@ void run_solver() {
 	for (int i = 0; i < Q; ++i)
 		cin >> queries[i];
 
-	//Main DFS
+	//Initializers
 	depth = vector<int>(grafo.N, -1);
 	low = vector<int>(grafo.N, -1);
 	articulation_point = vector<bool>(grafo.N, false);
 	bridge = vector<bool>(grafo.M, false);
 	bridge_component_of_node = vector<int>(grafo.N, -1);
 	bridge_component_nodes = vector<int>(grafo.N, 0);
-	// pila = stack<Edge>();
+
+	//Main DFS
 	calculate_biconnected_components(grafo, 0, 0, 0);
 	calculate_bridge_components(grafo, 0, 0);
 
-	// cout << endl;
-	// cout << depth << endl;
-	// cout << low << endl;
-	// cout << articulation_point << endl;
-	// cout << bridge << endl;
-
-	// cout << endl << "[";
-	// for (int i = 0; i < N; ++i) {
-	// 	cout << bridge_component_nodes[bridge_component_of_node[i]] << ", ";
-	// }
-	// cout << "]" << endl;
-
-	vector<bool> aux_visited;
-	aux_visited = vector<bool>(grafo.N, false);
-	cout << bridges_between_nodes(0, 8, 0, grafo, aux_visited) << endl;
-	aux_visited = vector<bool>(grafo.N, false);
-	cout << bridges_between_nodes(0, 4, 0, grafo, aux_visited) << endl;
-	aux_visited = vector<bool>(grafo.N, false);
-	cout << bridges_between_nodes(2, 4, 2, grafo, aux_visited) << endl;
-	aux_visited = vector<bool>(grafo.N, false);
-	cout << bridges_between_nodes(4, 9, 4, grafo, aux_visited) << endl;
-
 	//Handle queries
-	// for (int i = 0; i < Q; ++i)
-	// 	solve_query(i);
+	for (int i = 0; i < Q; ++i)
+		solve_query(queries[i], grafo);
 }
