@@ -6,9 +6,9 @@ El problema plantea un escenario en el que se tienen aulas y pasillos que las co
 
 En el problema interesa evaluar las posibilidades de poder circular las aulas ante la necesidad de evacuar la estructura en la que se encuentran, y para ello se requiere la capacidad de evaluar cierta cantidad de consultas (de ahora en más \textit{consultas de circulación}), cada una consistiendo en un par ordenado de aulas $a$ y $b$ (notación $\langle a,b \rangle$). La solución debe poder responder para cada una si es posible recorrer los pasillos dados de modo de partir de $a$, pasar por $b$ y volver a $a$, lo cual le permitiría a personas en $a$ ir al aula $b$ para avisar de la necesidad de evacuar y volver a $a$ para recuperar sus pertenencias. En nuestro modelo, esto equivale a detectar si existe un camino dirigido entre $a$ y $b$ y otro entre $b$ y $a$ en el grafo inducido por la instancia en cuestión (también \textit{grafo de aulas y pasillos}).
 
-Naturalmente, dada la motivación del problema que presenta el enunciado, es imperativo que las personas que circulen entre las aulas puedan luego llegar a la salida de la estructura. Como el enunciado aclara que desde cualquier aula se puede alcanzar de alguna manera esa salida, no modelaremos esa parte del problema y nos concentraremos únicamente en lo relativo a la circulación mencionada entre pares de aulas.
+Naturalmente, dada la motivación del problema que presenta el enunciado, es imperativo que las personas que circulen entre las aulas puedan luego llegar a la salida de la estructura. Como el enunciado aclara que desde cualquier aula se puede alcanzar de alguna manera esa salida, no modelamos esa parte del problema y nos concentramos únicamente en lo relativo a la circulación mencionada entre pares de aulas.
 
-Consideraremos que una consulta $\langle a,a \rangle$ siempre tiene respuesta positiva, ya que una persona en un aula determinada es capaz de alertar a los del mismo aula de la necesidad de evacuar y también de retirar sus pertenencias de ese aula.
+Consideramos que una consulta $\langle a,a \rangle$ siempre tiene respuesta positiva, ya que una persona en un aula determinada es capaz de alertar a los del mismo aula de la necesidad de evacuar y también de retirar sus pertenencias de esa aula.
 
 \subsection{Solución}
 
@@ -18,7 +18,7 @@ Abordaremos la solución en dos etapas. En la primera, buscaremos procesar el gr
 
 Entonces, para la primera etapa, nos interesa encontrar una forma de reducir la información del grafo a una estructura que resuma las posibilidades de circulación entre las distintas aulas. Concretamente, queremos poder determinar si, para un par ordenado de aulas arbitrario, es posible ir de la primera a la segunda y volver.
 
-Dado un grafo de aulas y pasillos, en relación a esto observemos que:
+Dado un grafo de aulas y pasillos, observemos que:
 \begin{itemize}
     \item Si un par de aulas está en una misma componente fuertemente conexa del grafo, es posible ir de cualquiera de ellas a la otra y luego volver.
     \item Si es posible ir de un aula a otra y volver, este par de aulas conforma un subgrafo fuertemente conexo que por ende es subgrafo de alguna componente fuertemente conexa del grafo.
@@ -108,7 +108,10 @@ Finalmente, en el algoritmo completo que resuelve el problema (\textbf{Algoritmo
 Se utilizaron instancias de prueba generadas manualmente que corresponden a las siguientes familias de instancias:
 
 \begin{itemize}
-    \item Grafos con una sola componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$.
-    \item Grafos con distintas componentes fuertemente conexas desconectadas entre sí, con cantidades de vértices mayores o iguales a 1, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$.
-    \item Grafos con distintas componentes conexas conectadas entre sí, consultando por distintos pares $\langle a, b \rangle$ tales que $a$ y $b$ corresponden a la misma componente, tales que $a$ y $b$ pertenecen a distintas componentes y se puede ir de $a$ a $b$ pero no volver, y tales que $a$ y $b$ pertenecen a distintas componentes y se puede volver de $b$ a $a$ pero no ir.
-    \item Grafos generados aleatoriamente con varias componentes fuertemente conexas tanto conecatadas entre sí como no, de dimensiones cercanas a las cotas propuestas para el testeo en el enunciado para corroborar el funcionamiento correcto de la implementación ante la mayor carga de datos.
+    \item Grafos con ninguna componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Las únicas que deben responderse afirmativamente son las del segundo tipo.
+    \item Grafos con una sola componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Deben responderse afirmativamente todas las consultas.
+    \item Grafos con distintas componentes fuertemente conexas desconectadas entre sí, con cantidades de vértices mayores o iguales a 1, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Deben responderse positivamente si y sólo si pertenecen a una misma componente.
+    \item Grafos con distintas componentes fuertemente conexas conectadas entre sí, consultando por distintos pares $\langle a, b \rangle$ tales que $a$ y $b$ corresponden a la misma componente, tales que $a$ y $b$ pertenecen a distintas componentes y se puede ir de $a$ a $b$ pero no volver, y tales que $a$ y $b$ pertenecen a distintas componentes y se puede volver de $b$ a $a$ pero no ir. Deben responderse positivamente si y sólo si pertenecen a una misma componente.
+\end{itemize}
+
+Además, se usaron grafos de dimensiones en el orden de las cotas propuestas en el enunciado para el testeo con el objetivo de corroborar el funcionamiento correcto de la implementación ante un mayor volumen de datos. Se utilizaron grafos con una sola componente fuertemente conexa en los cuales, según la teoría, cualquier consulta debe ser respondida afirmativamente.

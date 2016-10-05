@@ -1,0 +1,1 @@
+Ninguna componente fuertemente conexa. Deben responderse positivamente sólo ante pares de vértices idénticos.
