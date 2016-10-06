@@ -1,1 +1,114 @@
 \section{Ejercicio 3}
+
+\subsection{Problema}
+
+\subsection{Algoritmo e intuición}
+
+\subsubsection*{Pseudocódigo}
+
+Sea la clase $Grafo = <Vertices, Aristas, ListaAdyacencia>$
+	donde Vertices y Aristas son Enteros que representan la cantidad de vertices y aristas del grafo y
+	ListaAdyacencia es un $Vector<Lista<Par<Entero, Entero>>>$ donde
+	el tamano del vector es Vertices y por cada arista que conecta nodos v 
+	y w del grafo representado, ListaAdyacencia[v] incluye $<e, w>$ y
+	ListaAdyacencia[w] incluye $<e, v>$ donde $e$ es el número de arista (entre 0 y Aristas-1).
+
+\begin{algorithm}[]
+    \caption{ResolverQueries}
+    \Input{Grafo $grafo$, Queries $queries$}
+    $Vector<Bool>$ $puentes \gets [false,...,false]$ con size grafo.Aristas \;
+	$Vector<Entero>$ $depth \gets [-1,...,-1]$ con size grafo.Vertices \;
+	$Vector<Entero>$ $low \gets [-1,...,-1]$ con size grafo.Vertices \;
+	\emph{CalcularPuentesDFS$(grafo, puentes, depth, low, 0, 0, 0)$} \;
+	$Vector<Entero>$ $componente\_puente\_del\_vertice \gets [-1,...,-1]$ de size grafo.Vertices \;
+	$Vector<Entero>$ $vertices\_del\_componente\_puente \gets [0,...,0]$ de size grafo.Vertices \;
+	$Variable$ $Global$ $Entero$ $contador\_componentes \gets 0$ \;
+	\emph{CalcularComponentesPuenteDFS$(grafo, puentes, componente\_puente\_del\_vertice, $ $ vertices\_del\_componente\_puente, 0, contador\_componentes, 0)$} \;
+	\For{$query$ en $queries$} {
+		\If{$query.tipo$ == A} {
+			$Vector<Bool>$ $visitado \gets [false,...,false]$ con size grafo.Vertices \;
+			\emph{Imprimir PuentesEntreNodos$(grafo, puentes, visitado, query.esquina1, query.esquina2, query.esquina1)$}
+		}
+		\If{$query.tipo$ == B} {
+			\emph{Imprimir $puentes[query.calle]$}
+		}
+		\If{$query.tipo$ == C} {
+			$Entero$ $n$ \;
+			$n \gets vertices\_del\_componente\_puente[componente\_puente\_del\_vertice[query.esquina]]$ \;
+			\emph{Imprimir n-1}
+		}
+	}
+\end{algorithm}
+
+\begin{algorithm}[]
+    \caption{CalcularPuentesDFS}
+    \Input{Grafo $grafo$, Vector$<Bool>$ $puentes$, Vector$<Entero>$ $depth$, Vector$<Entero>$ $low$, Entero $v$, Entero $d$, Entero $padre$}
+    $depth[v] \gets d$ \;
+	$low[v] \gets d$ \;
+	\For {$<e, w>$ en $grafo.ListaAdyacencia[v]$ tal que $w$ != $padre$} {
+		\eIf{$depth[w]$ == -1}{
+			\emph{CalcularPuentesDFS$(grafo, puentes, depth, low, w, d+1, v)$} \;
+			$low[v] \gets min(low[v], low[w])$ \;
+			\If {$low[w] >= depth[w]$} {
+				$puentes[e] \gets true$
+			}
+		}{
+			$low[v] \gets min(low[v], depth[w])$ \;
+		}
+	}
+\end{algorithm}
+
+\begin{algorithm}[]
+    \caption{CalcularComponentesPuenteDFS}
+    \Input{Grafo $grafo$, Vector$<Bool>$ $puentes$, Vector$<Entero> componente\_puente\_del\_vertice$, Vector$<Entero> vertices\_del\_componente\_puente$, Entero $v$, Variable Global Entero $contador\_componentes$, Entero $componente\_actual$}
+    $componente\_puente\_del\_vertice[v] \gets componente\_actual$ \;
+    $vertices\_del\_componente\_puente[componente\_actual]++$ \;
+    \For {$<e, w>$ en $grafo.ListaAdyacencia[v]$} {
+    	\If {$componente\_puente\_del\_vertice[w]$ == -1} {
+			\eIf {$puentes[e]$} {
+				$contador\_componentes++$ \;
+				$Entero$ $componente \gets contador\_componentes$ \;
+				\emph{CalcularComponentesPuenteDFS($grafo, puentes, componente\_puente\_del\_vertice,$ 
+				$vertices\_del\_componente\_puente, w, contador\_componentes, componente$)} \;
+			}{
+				\emph{CalcularComponentesPuenteDFS($grafo, puentes, componente\_puente\_del\_vertice,$ 
+				$vertices\_del\_componente\_puente, w, contador\_componentes, componente\_actual$)}
+			}
+		}
+    }
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{PuentesEntreNodos}
+    \Input{Grafo $grafo$, Vector$<Bool>$ $puentes$, Vector$<Bool>$ $visitado$, Entero $src$, Entero $dst$, Entero $actual$}
+    $visitado[actual] \gets true$ \;
+    \If {$actual == dst$} {
+    	\Return{0}
+    }
+    $Entero$ $ans \gets -1$ \;
+    \For {$<e, w>$ en $grafo.ListaAdyacencia[v]$} {
+    	\If {$visitado[w]$ == $false$} {
+			$Entero$ $rec \gets$ PuentesEntreNodos$(grafo, puentes, visitado, src, dst, w)$ \;
+			\If{$rec$ != -1} {
+				$ans \gets puentes[e]$ ? $rec+1$ : $rec$
+			}
+		}
+    }
+    \Return{ans}
+\end{algorithm}
+
+\subsubsection*{Estrategia}
+
+\subsection{Correctitud}
+
+\subsubsection*{ResolverQueries}
+
+\subsubsection*{CalcularPuentesDFS}
+
+\subsubsection*{CalcularComponentesPuenteDFS}
+
+\subsubsection*{PuentesEntreNodos}
+
+\subsection{Complejidad}
+
+\subsection{Casos de prueba}
