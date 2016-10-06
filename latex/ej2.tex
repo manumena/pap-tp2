@@ -193,3 +193,30 @@ $G$.
 		\Edge[label=$1/1$](C1)(t)
 	\end{tikzpicture}
 \end{figure}
+
+A continuación se presenta el pseudocódigo del algoritmo que resuelve el
+problema:
+
+\begin{algorithm}[H]
+	\caption{Número mínimo de gráficos sin intersecciones}
+	\Input{Matriz $M \in \mathbb{Z}^{A \times D}$ donde $M_{ij}$ representa el valor de la
+	acción $i$ en el día $j$.}
+	\Output{El mínimo número de gráficos necesarios para graficar las acciones
+	sin que haya intersecciones.}
+
+	\emph{redFlujo} $\gets$ Crear digrafo con vértices $V_0 \cup V_1 \cup \left\{s,
+	t\right\}$ donde $\#(V_0) = \#(V_1) = A$ y $V_0 \cap V_1 = \emptyset$ \;
+	\ForEach{vértice $u \in V_0$} {
+		Agregar arco $(s, u)$ con capacidad 1 a \emph{redFlujo} \;
+		\ForEach{vértice $v \in V_1$} {
+			\If{$(\forall j \in [0 \dots D)) M_{uj} < M_{vj}$} {
+				Agregar arco $(u, v)$ con capacidad 1 a \emph{redFlujo} \;
+			}
+		}
+	}
+	\ForEach{vértice $v \in V_1$} {
+		Agregar arco $(v, t)$ con capacidad 1 a \emph{redFlujo} \;
+	}
+	\emph{flujoMáximo} $\gets$ Ejecutar algoritmo de Edmonds-Karp sobre \emph{redFlujo} \;
+	\Return{$A$ - \emph{flujoMáximo}} \;
+\end{algorithm}
