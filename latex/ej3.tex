@@ -268,6 +268,36 @@ porque el grafo es conexo de entrada. \\
 
 Sea N la cantidad de esquinas/nodos del grafo y M la cantidad de calles/aristas del grafo nos piden un algoritmo con complejidad
 $O(M+MQ_A+Q_B+Q_C)$ donde $Q_X$ es la cantidad de queries de tipo $X$. \\
-Como el grafo es conexo sabemos que $N \in O(M)$ (porque M es al menos N-1). \\
+
+Como el grafo es conexo sabemos que $O(N) \subseteq O(M)$ (porque M es al menos N-1). \\
+
+CalcularPuentesDFS hace un recorrido DFS del grafo para calcular los ejes puentes de la misma forma que el algoritmo para calcular
+Componentes Biconexas Maximales que vimos en clase es $O(N+M)$ porque cada nodo se recorre una sola vez a través de llamados recursivos
+y, aparte de esto, solo se realizan asignaciones y comparaciones. Como se vio antes $O(N) \subseteq O(M)$, entonces $O(N+M) \subseteq O(M)$.  \\
+
+CalcularComponentesPuenteDFS hace un recorrido DFS como en CalcularPuentesDFS y podemos saber los nodos ya visitados mediante el vector
+$componente\_puente\_del\_vertice$ por lo cual recorremos cada nodo una sola vez y cada arista lo consideramos solo en los ciclos For de
+los nodos que conecta. Aparte de los llamados recursivos que componen el DFS solo hay asignaciones y comparaciones, por lo cual la funci\'on
+es $O(N+M) \subseteq O(M)$. \\
+
+PuentesEntreNodos también hace un recorrido DFS como las dos funciones anteriores y mantiene los nodos visitados en el vector $visitado$. Aparte
+de esto solo se realizan comparaciones y asignaciones, por lo que esta funci\'on tambi\'en tiene complejidad $O(N+M) \subseteq O(M)$. \\
+
+ResolverQueries (el algoritmo principal):
+\begin{itemize}
+	\item Crea 5 vectores de longitud $O(N)$ o bien $O(M)$, ambos siendo $O(M)$. Entonces la complejidad de crearlos es $O(5M) \subseteq O(M)$.
+	\item Hace un llamado a la funci\'on CalcularPuentesDFS que tiene complejidad $O(M)$.
+	\item Hace un llamado a la funci\'on CalcularComponentesPuenteDFS que tiene complejidad $O(M)$.
+	\item Por cada query de tipo A creamos un vector de longitud $O(N) \subseteq O(M)$ y se hace un llamado a 
+	PuentesEntreNodos que es $O(M)$. En total por cada query de tipo A se hace trabajo $O(M+M) \subseteq O(M)$. Como
+	hay $Q_A$ queries de tipo A, estas conllevan una complejidad de $O(MQ_A)$.
+	\item Por cada query de tipo B solo se tiene que imprimir un valor ya calculado de un vector, lo cual es $O(1)$. Como
+	hay $Q_B$ queries de tipo B, estas conllevan una complejidad de $O(Q_B)$.
+	\item Por cada query de tipo C solo se realizan comparaciones y asignaciones, lo cual es $O(1)$. Como
+	hay $Q_C$ queries de tipo C, estas conllevan una complejidad de $O(Q_C)$.
+\end{itemize}
+
+Por lo tanto, teniendo en cuenta los 6 items previos, la complejidad final es $O(M+M+M+MQ_A+Q_B+Q_C) \subseteq O(M+MQ_A+Q_B+Q_C)$, tal y como
+se pide en el enunciado.
 
 \subsection{Casos de prueba}
