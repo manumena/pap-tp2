@@ -10,4 +10,6 @@
 // Here go declarations of functions which are exported by the problem solver,
 // global variables, etc.
 
+using namespace std;
+
 #endif // PAP_TP2_EJ1_H
