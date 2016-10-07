@@ -1,7 +1,5 @@
 #include "./ej1.h"
-#include <utility>	//std::pair
 #include <queue>
-
 
 /*
 **  Exercise 1
