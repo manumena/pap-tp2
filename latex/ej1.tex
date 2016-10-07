@@ -25,7 +25,7 @@ Las capacidades de las aristas serán de 1, pero además también deben tener
 capacidad 1 los nodos. Para modelar las capacidades de los vértices, se
 representó cada uno de ellos como un arco de capacidad 1 cuyos extremos son un
 nodo en donde inciden todas las aristas que incidirían en el vértice original
-y otro con todas las aristan salientes.
+y otro con todas las arista salientes.
 
 \begin{figure}[H]
 \centering
@@ -41,7 +41,7 @@ La estructura utilizada para la representación de la red fue un vector de
 listas de enteros (lista de adyacencias). Se reservaron las dos primeras
 posiciones del vector para la fuente(0) y el sumidero(1).
 
-El modelado de vértices con capacidades através de aristas con un nodo para
+El modelado de vértices con capacidades a través de aristas con un nodo para
 las entradas y otro para las salidas se realiza en el momento mismo de la
 lectura de la entrada. El vector de listas contiene exactamente $2N + 2$
 elementos, siendo $N$ la cantidad de esquinas. Esto se debe a que por cada
@@ -99,7 +99,7 @@ aumentaría o restaría el flujo que pasa por el eje.
 
 \subsection{Correctitud}
 
-Lo que el algoritmo debe devolver es la minima cantidad de esquinas a donde
+Lo que el algoritmo debe devolver es la mínima cantidad de esquinas a donde
 puedan situarse estudiantes de modo tal que cada alumno de secundaria siempre
 tenga que pasar por una de estas esquinas sin importar que camino tome o a que
 colegio vaya.

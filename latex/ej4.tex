@@ -32,7 +32,17 @@ En conclusión, en la primera etapa nos bastará con construir en tiempo lineal,
 
 \subsubsection{Algoritmo}
 
-La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece. Los mapas utilizados en nuestro algoritmo se consideran siempre de construcción en tiempo lineal en su cantidad de claves y de consulta y actualización en tiempo constante. Por su parte, los grafos se representan mediante listas de adyacencia que identifican los vértices por valores únicos de $v\_id$.
+La primera etapa consiste esencialmente en la aplicación al grafo de un
+algoritmo lineal de detección de componentes fuertemente conexas. Elegimos
+utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo
+de forma que asigne a cada componente fuertemente conexa que detecta una
+identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id,
+scc\_id \rangle$ que asocie a cada vértice, identificado unívocamente por un
+valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece. Los
+mapas utilizados en nuestro algoritmo se consideran siempre de construcción en
+tiempo lineal en su cantidad de claves y de consulta y actualización en tiempo
+constante. Por su parte, los grafos se representan mediante listas de adyacencia
+que identifican los vértices por valores únicos de $v\_id$.
 
 \bigskip
 

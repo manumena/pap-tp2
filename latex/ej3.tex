@@ -230,9 +230,9 @@ Este algoritmo es cas\'i idéntico al visto en clase para calcular Componentes B
 Dados los vectores $puentes$, $depth$, $low$ va guardando mediante un recorrido DFS en:
 \begin{itemize}
 	\item $puentes$: para cada numero de arista, si ese arista es un puente.
-	\item $depth$: la distancia del nodo actual al nodo raiz del \'arbol DFS mediante Tree edges.
-	\item $low$: la menor distancia/$depth$ de la raiz del \'arbol DFS a la que el nodo actual puede saltar
-	desde su sub-\'arbol de DFS con raiz en si mismo. \\
+	\item $depth$: la distancia del nodo actual al nodo raíz del \'arbol DFS mediante Tree edges.
+	\item $low$: la menor distancia/$depth$ de la raíz del \'arbol DFS a la que el nodo actual puede saltar
+	desde su sub-\'arbol de DFS con raíz en si mismo. \\
 	Esto quiere decir que dado el nodo v: $low[v]$ = $\min(d[v], \min\limits_{y \in hijosDFS(v)} low[y], \min\limits_{backedge(v,w)} d[w])$
 \end{itemize}
 
@@ -240,9 +240,9 @@ Para calcular los $low$ se va recorriendo mediante DFS la lista de adyacencia de
 \begin{itemize}
 	\item Si es no visitado (hay que fijarse que $depth$ de ese nodo no sea -1) hacemos una llamada recursiva con el nodo
 	actual ahora como padre y al Entero $d$ se le suma 1 indicando que en el \'arbol de DFS actual ese nodo
-	estará a un nodo de distancia más de la raiz del \'arbol. Después se actualiza el $low$ del nodo actual
+	estará a un nodo de distancia más de la raíz del \'arbol. Después se actualiza el $low$ del nodo actual
 	como el mínimo entre este y el del nodo hijo que se visita ya que si un hijo puede llegar a un nodo
-	mas cercano a la raiz del \'arbol, el nodo actual también. \\
+	mas cercano a la raíz del \'arbol, el nodo actual también. \\
 	$Observaci\acute{o}n (clase)$: Un tree-edge del nodo v a uno de sus hijos w es puente si y solo si, low[w] $\ge$ depth[w], es decir, 
 	no existe ning\'un back-edge que permita salir del sub\'arbol con ra\'iz en w.
 	\item Si el nodo fue visitado (es ancestro en el \'arbol de DFS) se actualiza el $low$ del nodo actual
@@ -254,9 +254,9 @@ articulación y reportar componentes biconexas maximales, solo se guardan los ar
 
 $Observaci\acute{o}n$: el grafo tiene que ser conexo para devolver todos los puentes (pero sabemos por la entrada que lo es). \\
 
-$Observaci\acute{o}n$: el parámetro $d$ inicial siempre es 0 porque es la distancia de la raiz a si misma. \\
+$Observaci\acute{o}n$: el parámetro $d$ inicial siempre es 0 porque es la distancia de la raíz a si misma. \\
 
-$Observaci\acute{o}n$: si bien el nodo inicial (que será la raiz del \'arbol DFS) es arbitrario, se quiere que
+$Observaci\acute{o}n$: si bien el nodo inicial (que será la raíz del \'arbol DFS) es arbitrario, se quiere que
 este sea el nodo 0 ya que el enunciado asegura solamente que hay al menos un nodo en todo el grafo. \\
 
 \subsubsection*{CalcularComponentesPuenteDFS}
