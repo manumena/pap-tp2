@@ -79,3 +79,39 @@ Entonces el valor del flujo máximo de esta red es la mínima cantidad de esquin
 
 \subsection{Complejidad}
 
+\subsection{Casos de prueba}
+
+Para evaluar el código desarrollado además de ver que diera los resultados
+correctos en las entradas provistas por el enunciado se realizaron las
+siguientes pruebas:
+
+\begin{itemize}
+	\item Camino simple
+	\item Grafo moño: este grafo es el que tiene muchas casas, muchas escuelas, y todas pasan por una única esquina neutral, siendo esta el cuello de botella.
+	\item Caminos atravezados: este grafo es le representado en la figura REFERENCIA. El propósito de esta prueba es chequear el correcto funcionamiento de la red residual y los caminos de aumento. Debido a la topología del grafo es posible que el \textit{BFS} devuelva el camino en zigzag. Al tocar los nodos que el siguente camino contemplará debe tenerse cuidado de no haber manipulado de forma errónea los el camino de aumento de manera tal que el segundo camino encontrado no este cortado.
+	\item Una casa y una escuela: estos dos casos cumplen el propósito de corroborar que las escuelas y casas hayan sido teniadas en cuenta como posibles cuellos de botella, no solamente las esquinas neutrales.
+	\item Casos normales grandes donde se prueba el algoritmo en general.
+\end{itemize}
+
+\begin{figure}[H]
+	\caption{Caminos atravezados}
+	\centering
+	\begin{tikzpicture}[x=1.5cm ,y=1.5cm]
+		\SetGraphUnit{2}
+		\GraphInit[vstyle=Normal]
+		\Vertex[L=$A_1$]{A1}
+		\EA[L=$A_2$](A1){A2}
+		\SO[L=$X_1$](A1){X1}
+		\SO[L=$X_2$](A2){X2}
+		\SO[L=$X_3$](X1){X3}
+		\SO[L=$E_1$](X3){E1}
+		\SO[L=$E_2$](X2){E2}
+		\Edge(A2)(X2)
+		\Edge(X3)(X1)
+		\Edge(X3)(E1)
+		\SetUpEdge[style={ultra thick}, color=red]
+		\Edge(A1)(X1)
+		\Edge(X2)(X1)
+		\Edge(X2)(E2)
+	\end{tikzpicture}
+\end{figure}
