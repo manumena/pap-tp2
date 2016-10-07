@@ -267,3 +267,39 @@ temporal \ord($A \times (A + A^2$) = \ord($A^2 + A^3$) = \ord($A^3$).
 
 Es así entonces como al sumar ambos términos se obtiene la complejidad buscada \ord($A^2 \times D +
 A^3$) = \ord($A^2 \times (A + D)$).
+
+\subsection{Casos de prueba}
+
+Para evaluar el código desarrollado además de ver que diera los resultados
+correctos en las entradas provistas por el enunciado se realizaron las
+siguientes pruebas:
+
+\begin{itemize}
+	\item{Instancias pequeñas
+		\begin{itemize}
+			\item{Una única acción}
+			\item{Acciones sin intersecciones}
+			\item{Acciones con una intersección}
+			\item{Acciones con dos intersecciones}
+		\end{itemize}
+	}
+	\item{Instancias grandes
+		\begin{itemize}
+			\item{Acciones sin intersecciones}
+			\item{Acciones todas intersecándose}
+		\end{itemize}
+	}
+\end{itemize}
+
+Las instancias pequeñas fueron para corroborar que el algoritmo pudiera manejar
+de forma correcta el solapamiento de las acciones, sin importar el orden en el
+cual estas aparecían en la entrada.
+
+Las instancias grandes tuvieron como foco principal el corroborar que la
+solución desarrollada ejecutara sin problemas para valores grandes de $A$ y $D$.
+Para la instancia donde no hay intersecciones, cada acción tiene el mismo valor
+todos los días y cada acción posee un valor distinto al del resto. Para el caso
+donde todas las acciones se intersecan básicamente se le asignó a cada acción el
+mismo valor para todos los días.
+
+Ambas instancias se probaron con $A = 1000$ y $D = 100$.
