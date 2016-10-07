@@ -1,4 +1,4 @@
-ENTREGABLE=pap-tp2.tar.gz
+ENTREGABLE=ken_thompson.tar.gz
 FILES=latex/informe.pdf src
 
 .PHONY: all clean
