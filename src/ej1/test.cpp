@@ -57,47 +57,47 @@ vector<list<int>> readInput(string path) {
 }
 
 void test_simple_path() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/simple_path")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/simple_path")));
 }
 
 void test_topknot() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/topknot")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/topknot")));
 }
 
 void test_double_path() {
-	ASSERT_EQ(2, maxFlow(readInput("ej1/test_cases/double_path")));
+	ASSERT_EQ(2, maxFlow(readInput("test_cases/double_path")));
 }
 
 void test_one_house() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/one_house")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/one_house")));
 }
 
 void test_one_school() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/one_school")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/one_school")));
 }
 
 void test_big() {
-	ASSERT_EQ(2, maxFlow(readInput("ej1/test_cases/big")));
+	ASSERT_EQ(2, maxFlow(readInput("test_cases/big")));
 }
 
 void test_big2() {
-	ASSERT_EQ(3, maxFlow(readInput("ej1/test_cases/big2")));
+	ASSERT_EQ(3, maxFlow(readInput("test_cases/big2")));
 }
 
 void test_example1() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/example1")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/example1")));
 }
 
 void test_example2() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/example2")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/example2")));
 }
 
 void test_example3() {
-	ASSERT_EQ(2, maxFlow(readInput("ej1/test_cases/example3")));
+	ASSERT_EQ(2, maxFlow(readInput("test_cases/example3")));
 }
 
 void test_example4() {
-	ASSERT_EQ(1, maxFlow(readInput("ej1/test_cases/example4")));
+	ASSERT_EQ(1, maxFlow(readInput("test_cases/example4")));
 }
 
 void run_unit_tests() {

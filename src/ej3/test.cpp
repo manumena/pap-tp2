@@ -59,21 +59,21 @@ void solve_with_input(string file_name, vector<int>& query_solution) {
 
 void test1(){
 	vector<int> query_solution = vector<int>();
-	solve_with_input("ej3/cases/example_1",query_solution);
+	solve_with_input("cases/example_1",query_solution);
 	vector<int> solution = {3,0,0,1,2,0};
 	ASSERT(compare_vectors(query_solution, solution));
 }
 
 void test2(){
 	vector<int> query_solution = vector<int>();
-	solve_with_input("ej3/cases/example_2",query_solution);
+	solve_with_input("cases/example_2",query_solution);
 	vector<int> solution = {0, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 0};
 	ASSERT(compare_vectors(query_solution, solution));
 }
 
 void test3(){
 	vector<int> query_solution = vector<int>();
-	solve_with_input("ej3/cases/example_3",query_solution);
+	solve_with_input("cases/example_3",query_solution);
 	vector<int> solution = vector<int>(1000, 0);
 	for (int i=0; i < 1000; ++i)
 		solution[i]=i;
@@ -82,7 +82,7 @@ void test3(){
 
 void test4(){
 	vector<int> query_solution = vector<int>();
-	solve_with_input("ej3/cases/example_4",query_solution);
+	solve_with_input("cases/example_4",query_solution);
 }
 
 void run_unit_tests() {

@@ -10,7 +10,7 @@ using namespace std;
 
 void test_sample_input_1() {
 	ifstream input_file;
-	input_file.open("ej2/test_cases/input_1");
+	input_file.open("test_cases/input_1");
 
 	int stock_count;
 	int day_count;
@@ -34,7 +34,7 @@ void test_sample_input_1() {
 
 void test_sample_input_2() {
 	ifstream input_file;
-	input_file.open("ej2/test_cases/input_2");
+	input_file.open("test_cases/input_2");
 
 	int stock_count;
 	int day_count;
@@ -58,7 +58,7 @@ void test_sample_input_2() {
 
 void test_sample_input_3() {
 	ifstream input_file;
-	input_file.open("ej2/test_cases/input_3");
+	input_file.open("test_cases/input_3");
 
 	int stock_count;
 	int day_count;
@@ -82,7 +82,7 @@ void test_sample_input_3() {
 
 void test_sample_input_4() {
 	ifstream input_file;
-	input_file.open("ej2/test_cases/input_4");
+	input_file.open("test_cases/input_4");
 
 	int stock_count;
 	int day_count;

@@ -6,7 +6,7 @@
 **  Unit tests
 */
 
-string CASE_DIR = "ej4/cases/";
+string CASE_DIR = "cases/";
 
 vector<test_case_input> cases_filenames = {
     {CASE_DIR + "ssd/ssd.dat", CASE_DIR + "ssd/ssd.exp"},
