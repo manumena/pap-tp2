@@ -263,7 +263,10 @@ de $s$ a $V_0$, o los que parten de $V_1$ a $t$.
 
 Por lo tanto, para nuestro algoritmo que corre sobre un grafo bipartito donde
 $\#(V_0) = \#(V_1) = A$, el algoritmo de Edmond Karps tiene como complejidad
-temporal \ord($A \times (A + A^2$) = \ord($A^2 + A^3$) = \ord($A^3$).
+temporal \ord($A \times (A + A^2$) = \ord($A^2 + A^3$) = \ord($A^3$). Cabe
+aclarar que nuestro algoritmo en lugar de realizar \emph{BFS} hace
+\emph{DFS}, pero esto es meramente un detalle implementativo que no afecta al
+cálculo de complejidad ni su demostración.
 
 Es así entonces como al sumar ambos términos se obtiene la complejidad buscada \ord($A^2 \times D +
 A^3$) = \ord($A^2 \times (A + D)$).
