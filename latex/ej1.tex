@@ -17,9 +17,20 @@ Las capacidades de las aristas serán de 1, pero además también deben tener ca
 
 Se construye la red residual y luego se aplica el ya conocido algoritmo de Edmond-Karps para conocer el flujo máximo.
 
+\subsubsection*{Detalles implementativos}
+
+La estructura utilizada para la representación de la red fue un vector de listas de enteros (lista de adyacencias). Se reservaron las dos primeras posiciones del vector para la fuente(0) y el sumidero(1).
+
+El modelado de vértices con capacidades através de aristas con un nodo para las entradas y otro para las salidas se realiza en el momento mismo de la lectura de la entrada. El vector de listas contiene exactamente $2N + 2$ elementos, siendo $N$ la cantidad de esquinas. Esto se debe a que por cada esquina existirán dos nodos(el de entrada y el de salida) y se tiene dos espacios mas para la fuente y el sumidero.
+
+Al realizar la lectura se tienen dos ciclos. El primero lee el tipo de cada esquina. Si es una casa de alumno entonces se agrega el nodo de entrada a los vecinos de la fuente. Si es escuela se agrega el sumidero a los vecinos de el nodo de salida. Y si es una esquina neutral no se tiene un trato especial. Para los tres casos se agrega el nodo de salida como único incidido por el nodo de entrada.
+
+El segundo ciclo simplemente realiza la lectura de ejes, agregando el nodo de entrada de uno como incidido por el nodo de salida del otro y viceversa.
+
+Una vez hecho esto ya se tiene una red lista para ser procesada.
+
 \subsubsection*{Pseudocódigo}
 
-La estructura utilizada para la representación de la red fue un vector de listas de enteros (lista de adyacencias). Se reservaron las dos primeras posiciones del vector para la fuente y el sumidero.
 
 \begin{algorithm}[]
 	\caption{flujoMáximo}
@@ -65,3 +76,6 @@ Lo que el algoritmo devuelve es el valor flujo máximo. Por teorema se sabe que 
 Lo que hace que la capacidad del corte mínimo en esta red de flujo represente el cardinal del conjunto de esquinas es el hecho de que los vértices tengan capacidad 1. Esto provoca que la capacidad del corte no este dada por la capacidad de las aristas salientes sino por la cantidad de nodos del corte que tienen aristas salientes. Entonces si para cualquier corte de esta red de flujo, su capacidad es igual a la cantidad de nodos con aristas salientes, es decir, esquinas de las cuales salen caminos, consiguiendo el corte mínimo se obtendría el cuello de botella y su capacidad sería el cardinal del conjunto.
 
 Entonces el valor del flujo máximo de esta red es la mínima cantidad de esquinas en las que deben situarse estudiantes para poder interceptar a todos los alumnos sin importar qué caminos tomen o a qué escuela asistan.
+
+\subsection{Complejidad}
+
