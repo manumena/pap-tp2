@@ -156,15 +156,49 @@ Con esta motivación definimos los Bridge Components del grafo. Estos componente
 maximal que no es un puente en un solo nodo. \\
 
 Ejemplo:\\
+
 \begin{figure}[H]
-\centering
-\includegraphics[width=90mm]{./img/bridge_comp_1.jpeg}
 \caption{Grafo original}
-\end{figure}
-\begin{figure}[H]
 \centering
-\includegraphics[width=90mm]{./img/bridge_comp_2.jpeg}
+\begin{tikzpicture}
+\begin{scope}[every node/.style={circle,thick,draw}]
+    \node (A) at (0,0) {A};
+    \node (B) at (0,2) {B};
+    \node (C) at (1,1) {C};
+    \node (D) at (3,1) {D};
+    \node (E) at (4,0) {E};
+    \node (F) at (4,2) {F};
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every node/.style={fill=white,circle},
+              every edge/.style={draw=black,very thick}]
+    \path [-] (A) edge (B);
+    \path [-] (A) edge (C);
+    \path [-] (B) edge (C);
+    \path [-] (C) edge[draw=red] (D);
+    \path [-] (D) edge (E);
+    \path [-] (E) edge (F);
+    \path [-] (F) edge (D); 
+\end{scope}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
 \caption{Grafo condensado en Bridge Components}
+\centering
+\begin{tikzpicture}
+\begin{scope}[every node/.style={circle,thick,draw}]
+    \node (A) at (0,0) {A,B,C};
+    \node (D) at (2,0) {D,E,F};
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every node/.style={fill=white,circle},
+              every edge/.style={draw=black,very thick}]
+    \path [-] (A) edge[draw=red] (D);
+\end{scope}
+\end{tikzpicture}
 \end{figure}
 
 El algoritmo CalcularComponentesPuenteDFS hace esto guardando para cada nodo 
@@ -301,3 +335,40 @@ Por lo tanto, teniendo en cuenta los 6 items previos, la complejidad final es $O
 se pide en el enunciado.
 
 \subsection{Casos de prueba}
+
+En primera instancia comprobamos que el algoritmo devuelva la salida correcta para los casos provistos por la cátedra. \\
+Luego generamos nuestras propias instancias bajo las cotas del enunciado ($N  \leq  10^4, M \leq 10^5,Q \leq 10^5,Q_A  \leq 10^3$). \\
+Mediante estos, comprobamos no solo la correctitud misma del algoritmo sino también casos borde 
+(por ejemplo, el grafo estrella y el grafo linea) y que no tarde demasiado en encontrar una respuesta para instancias grandes. \\
+Los casos probados fueron:
+\begin{itemize}
+	\item Esquinas y calles formando grafo linea con $N$=$10^4$ y $Q_A$=$10^3$.
+	\item Esquinas y calles formando grafo estrella con $N$=$10^4$ y $Q$=$10^5$.
+	\item Esquinas y calles formando el siguiente grafo ($Q=10$):
+		\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+		\begin{scope}[every node/.style={circle,thick,draw}]
+		    \node (A) at (0,0) {A};
+		    \node (B) at (0,2) {B};
+		    \node (C) at (1,1) {C};
+		    \node (D) at (3,1) {D};
+		    \node (E) at (4,0) {E};
+		    \node (F) at (4,2) {F};
+		\end{scope}
+
+		\begin{scope}[>={Stealth[black]},
+		              every node/.style={fill=white,circle},
+		              every edge/.style={draw=black,very thick}]
+		    \path [-] (A) edge (B);
+		    \path [-] (A) edge (C);
+		    \path [-] (B) edge (C);
+		    \path [-] (C) edge[draw=red] (D);
+		    \path [-] (D) edge (E);
+		    \path [-] (E) edge (F);
+		    \path [-] (F) edge (D); 
+		\end{scope}
+		\end{tikzpicture}
+		\end{figure}
+	\item Caso provisto por la cátedra.
+\end{itemize}
