@@ -12,4 +12,6 @@
 
 using namespace std;
 
+int maxFlow(vector<list<int>> network);
+
 #endif // PAP_TP2_EJ1_H
