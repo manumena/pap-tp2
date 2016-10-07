@@ -9,12 +9,12 @@
 string CASE_DIR = "ej4/cases/";
 
 vector<test_case_input> cases_filenames = {
-    {CASE_DIR + "ssd/ssd.dat", CASE_DIR + "ssd/ssd.out"},
-    {CASE_DIR + "sss/sss.dat", CASE_DIR + "sss/sss.out"},
-    {CASE_DIR + "vsc/vsc.dat", CASE_DIR + "vsc/vsc.out"},
-    {CASE_DIR + "vsdc/vsdc.dat", CASE_DIR + "vsdc/vsdc.out"},
-    {CASE_DIR + "vsdd/vsdd.dat", CASE_DIR + "vsdd/vsdd.out"},
-    {CASE_DIR + "nsccs/nsccs.dat", CASE_DIR + "nsccs/nsccs.out"}
+    {CASE_DIR + "ssd/ssd.dat", CASE_DIR + "ssd/ssd.exp"},
+    {CASE_DIR + "sss/sss.dat", CASE_DIR + "sss/sss.exp"},
+    {CASE_DIR + "vsc/vsc.dat", CASE_DIR + "vsc/vsc.exp"},
+    {CASE_DIR + "vsdc/vsdc.dat", CASE_DIR + "vsdc/vsdc.exp"},
+    {CASE_DIR + "vsdd/vsdd.dat", CASE_DIR + "vsdd/vsdd.exp"},
+    {CASE_DIR + "nsccs/nsccs.dat", CASE_DIR + "nsccs/nsccs.exp"}
 };
 
 vector<bool> read_results(istream& is) {

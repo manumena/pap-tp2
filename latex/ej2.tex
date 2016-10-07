@@ -198,7 +198,7 @@ A continuación se presenta el pseudocódigo del algoritmo que resuelve el
 problema:
 
 \begin{algorithm}[H]
-	\caption{Número mínimo de gráficos sin intersecciones}
+	\caption{Número mínimo de gráficos sin intersecciones} \label{ej2:alg}
 	\Input{Matriz $M \in \mathbb{Z}^{A \times D}$ donde $M_{ij}$ representa el valor de la
 	acción $i$ en el día $j$.}
 	\Output{El mínimo número de gráficos necesarios para graficar las acciones
@@ -220,3 +220,50 @@ problema:
 	\emph{flujoMáximo} $\gets$ Ejecutar algoritmo de Edmonds-Karp sobre \emph{redFlujo} \;
 	\Return{$A$ - \emph{flujoMáximo}} \;
 \end{algorithm}
+
+\subsection{Complejidad teórica}
+
+La complejidad requerida para este ejercicio era \ord($A^2 \times (A + D)$).
+Procederemos a probar que la solución implementada posee esa misma cota temporal.
+
+Para ello nos será más cómodo expresar la complejidad como \ord($A^2 \times D +
+A^3$). Comenzaremos por el primer término, \ord($A^2 \times D$). Este término
+corresponde a la creación de la red de flujo.
+
+En Algoritmo \ref{ej2:alg} se puede observar cómo por cada vértice $u \in V_0$,
+se recorren todos los vértices $v \in V_1$ y se consulta si la acción está
+acotada superiormente en todos los días. Esto corresponde a tomar cada par ($u,
+v$) y comparar a lo largo de los $D$ días si el valor de la acción $v$ es
+siempre mayor al de $u$. Todos los pares posibles son $A \times A$, por lo tanto
+el costo de creación del flujo es \ord($A^2 \times D$).
+
+El segundo término, \ord($A^3$) requiere algo más de análisis. Luego de crear la
+red de flujo se ejecuta sobre la misma el algoritmo de Edmond Karps. Nuestra red
+de flujo tiene \ord($N$) = \ord($A$) y \ord($M$) = \ord($A^2$) puesto que en el
+caso donde ningún gráfico interseca a otro, una acción va a estar acotada por $A
+- 1$ acciones, la siguiente por $A - 2$, luego $A - 3$ y así sucesivamente hasta
+llegar a 0. Esto resulta en que el número de arcos sea equivalente a una suma de
+Gauss cuyo valor es $\frac{A \times (A - 1)}{2}$.
+
+El algoritmo de Edmond Karps utiliza \emph{BFS} para buscar caminos de aumento
+de $s$ a $t$ en la red residual. Cuando no encuentra más caminos, finaliza. Para
+la red correspondiente a un grafo bipartito se puede demostrar que
+se necesita realizar a lo sumo $N$ veces el \emph{BFS}, lo cual resulta en una
+complejidad de \ord($N \times (N + M)$).
+
+Para ver que esto es cierto primero tenemos que la capacidad de todos los arcos
+es 1. Luego cada vez que se encuentra un camino de aumento nuevo de $s$ a $t$,
+en la red de flujo va a haber un arco de $s$ a $V_0$ y otro de $V_1$ a
+$t$ cuya capacidad pasa de 1 a 0 tal que en la red residual su arco
+correspondiente cambia de orientación y se le asigna una capacidad de 1. Si en cada iteración
+sobre la red residual del grafo bipartito se encuentra un nuevo camino de
+aumento, a lo sumo van a haber $\min\left\{\#(V_0), \#(V_1)\right\}$
+iteraciones. Esto se debe a que o bien ya se utilizaron todos los arcos que van
+de $s$ a $V_0$, o los que parten de $V_1$ a $t$.
+
+Por lo tanto, para nuestro algoritmo que corre sobre un grafo bipartito donde
+$\#(V_0) = \#(V_1) = A$, el algoritmo de Edmond Karps tiene como complejidad
+temporal \ord($A \times (A + A^2$) = \ord($A^2 + A^3$) = \ord($A^3$).
+
+Es así entonces como al sumar ambos términos se obtiene la complejidad buscada \ord($A^2 \times D +
+A^3$) = \ord($A^2 \times (A + D)$).
