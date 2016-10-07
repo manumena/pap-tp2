@@ -30,7 +30,7 @@ En conclusión, en la primera etapa nos bastará con construir en tiempo lineal,
 
 \subsubsection{Algoritmo}
 
-La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece. Los mapas utilizados en nuestro algoritmo se consideran siempre de construcción en tiempo lineal en su cantidad de claves y de consulta y actualización en tiempo constante. Por su parte, los grafos se representan mediante listas de adyaencia que identifican los vértices por valores únicos de $v\_id$.
+La primera etapa consiste esencialmente en la aplicación al grafo de un algoritmo lineal de detección de componentes fuertemente conexas. Elegimos utilizar el \textit{Algoritmo de Kosaraju} para ese propósito, implementándolo de forma que asigne a cada componente fuertemente conexa que detecta una identificación unívoca del tipo $scc\_id$ y devuelva un mapa $\langle v\_id, scc\_id \rangle$ que asocie a cada vértice, identificado únivocamente por un valor del tipo $v\_id$, la componente fuertemente conexa a la que pertenece. Los mapas utilizados en nuestro algoritmo se consideran siempre de construcción en tiempo lineal en su cantidad de claves y de consulta y actualización en tiempo constante. Por su parte, los grafos se representan mediante listas de adyacencia que identifican los vértices por valores únicos de $v\_id$.
 
 \bigskip
 
@@ -59,9 +59,9 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
 
     $id \gets$ obtenerIdUnicoDeSCC() \;
     \For {$v$ en $V(G)$} {
-        \If {el valor de  $v$ en $mapeados$ es falso} {
+        \If {el valor de  $v$ en $mapeados$ es \textit{false}} {
             Explorar mediante \textit{DFS} sólo un árbol de $G$ empezando en $v$ como su raíz, marcando cada vértice descubierto con $true$ en $mapeados$ y asociándole en $M$ el valor $id$ \;
-            $id \gets obtenerIdUnicoDeSCC()$ \;
+            $id \gets$ obtenerIdUnicoDeSCC() \;
         }
     }
 
@@ -70,7 +70,7 @@ La primera etapa consiste esencialmente en la aplicación al grafo de un algorit
 
 \medskip
 
-siendo $obtenerIdUnicoDeSCC()$ una función que provee valores únicos de tipo $scc\_id$ con cada invocación en tiempo constante.
+siendo \textit{obtenerIdUnicoDeSCC()} una función que provee valores únicos de tipo $scc\_id$ con cada invocación en tiempo constante.
 
 \medskip
 
@@ -81,7 +81,7 @@ En la segunda etapa, queda sencillamente usar el mapa construido por Kosaraju pa
 \begin{algorithm}[H]
 	\caption{ResponderConsultas}
 	\Input{
-        $G$: grafo dirigido representado con listas de adyacencia $\mid$ $Q$: secuencia de consultas de circulación $\langle a, b \rangle$
+        $G$: grafo dirigido representado con listas de adyacencia, $Q$: secuencia de consultas de circulación $\langle a, b \rangle$
     }
 
     $M \gets \mathit{Kosaraju(G)}$ \;
@@ -99,19 +99,23 @@ En la segunda etapa, queda sencillamente usar el mapa construido por Kosaraju pa
 
 Sea $G$ el grafo de aulas y pasillos de alguna instancia del problema con $Q$ consultas de circulación. Sea $A$ cantidad de vértices de $G$ y $P$ su cantidad de ejes.
 
-En nuestra implementación de \textit{Kosaraju} (\textbf{Algoritmo 1)}), en la línea \texttt{1} se construye un vector de los vértices secuencialmente según el orden de finalización de los mismos en una exploración \textit{DFS}, de manera análoga a lo visto en clase. Por lo tanto, esta línea agrega un tiempo de $O(A+P)$. En la línea \texttt{2}, creamos el grafo traspuesto $G^T$ de $G$, corriendo sobre $G$ un \textit{DFS} que, en la etapa de cierre de cada vértice $v$, agrega en $G^T$ el eje $(w,v)$ por cada eje $(v,w)$ saliente de $v$. Es decir que, al cerrar cada vértice $v$, suma un costo de $O(out(v))$ siendo $out(v)$ el \textit{out-degree} de $v$. Por ende, los pasos de construcción de $G^T$ agregan al \textit{DFS} un costo total de $O(P)$, dado que cada vértice es cerrado exactamente una vez por el \textit{DFS} y $\sum\limits_{v \in V(G)} out(v) = P$, obteniendo un nuevo aporte de $O(A+P)$ operaciones. Por último, en la tercera línea es donde se explora $G^T$ mediante \textit{DFS} según el orden calculado en la primera línea. La única modificación al paso análogo de la versión del algoritmo dada en clase es el agregado en tiempo constante de cada vértice al mapa correspondiente en lugar de su impresión, con lo que alcanza para afirmar que el costo temporal es el mismo de $O(A+P)$. En conclusión, tenemos que este algoritmo tiene complejidad temporal $O(A+P)$.
+En nuestra implementación de \textit{Kosaraju} (\textbf{Algoritmo 1}), en la línea \texttt{1} se construye un vector de los vértices secuencialmente según el orden de finalización de los mismos en una exploración \textit{DFS}, de manera análoga a lo visto en clase. Por lo tanto, esta línea agrega un tiempo de $O(A+P)$. En la línea \texttt{2}, creamos el grafo traspuesto $G^T$ de $G$, corriendo sobre $G$ un \textit{DFS} que, en la etapa de cierre de cada vértice $v$, agrega en $G^T$ el eje $(w,v)$ por cada eje $(v,w)$ saliente de $v$. Es decir que, al cerrar cada vértice $v$, suma un costo de $O(out(v))$ siendo $out(v)$ el \textit{out-degree} de $v$. Por ende, los pasos de construcción de $G^T$ agregan al \textit{DFS} un costo total de $O(P)$, dado que cada vértice es cerrado exactamente una vez por el \textit{DFS} y $\sum\limits_{v \in V(G)} out(v) = P$, obteniendo un nuevo aporte de $O(A+P)$ operaciones. Por último, en la tercera línea es donde se explora $G^T$ mediante \textit{DFS} según el orden calculado en la primera línea. La única modificación al paso análogo de la versión del algoritmo dada en clase es el agregado en tiempo constante de cada vértice al mapa correspondiente en lugar de su impresión, con lo que alcanza para afirmar que el costo temporal es el mismo de $O(A+P)$. En conclusión, tenemos que este algoritmo tiene complejidad temporal $O(A+P)$.
 
-Finalmente, en el algoritmo completo que resuelve el problema (\textbf{Algoritmo 3}), tenemos una invocación a la implementación de \textit{Kosaraju} del \textbf{Algoritmo 1} de costo $O(A+P)$, y luego $Q$ iteraciones de respuesta a cada consulta en constante en base al mapa resultante de la corrida de \textit{Kosaraju}, dando en total una complejidad temporal de $O(A+P+Q)$.
+Finalmente, en el algoritmo completo que resuelve el problema (\textbf{Algoritmo 3}), tenemos una invocación a la implementación de \textit{Kosaraju} del \textbf{Algoritmo 1} de costo $O(A+P)$, y luego $Q$ iteraciones de respuesta a cada consulta en tiempo constante en base al mapa resultante de la corrida de \textit{Kosaraju}, dando en total una complejidad temporal de $O(A+P+Q)$.
 
-\subsubsection{Casos de prueba}
+\subsubsection{Detalles de implementación}
+
+Como antes de resolver cada instancia se conoce la cantidad $A$ de vértices que tendrá el grafo de aulas y pasillos correspondientes, para los valores de tipo \textit{v\_id} usamos enteros de $0$ a $A-1$ e implementamos los mapas utilizados por nuestro algoritmo como arreglos de $A$ elementos de tipo $T$ que contienen en la posición $i$ el valor asociado al vértice identificado por $i$. De este modo, logramos la complejidad pretendida de inicialización en tiempo lineal en cantidad de claves y de consulta y modificación en $O(1)$.
+
+\subsection{Casos de prueba}
 
 Se utilizaron instancias de prueba generadas manualmente que corresponden a las siguientes familias de instancias:
 
 \begin{itemize}
-    \item Grafos con ninguna componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Las únicas que deben responderse afirmativamente son las del segundo tipo.
-    \item Grafos con una sola componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Deben responderse afirmativamente todas las consultas.
+    \item Grafos sin ninguna componente fuertemente conexa, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Las únicas que deben responderse afirmativamente son las del segundo tipo.
+    \item Grafos con una sola componente fuertemente conexa y cantidades de vértices mayores a 1, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Deben responderse afirmativamente todas las consultas.
     \item Grafos con distintas componentes fuertemente conexas desconectadas entre sí, con cantidades de vértices mayores o iguales a 1, consultando por distintos pares $\langle a, b \rangle$, tanto con $a \neq b$ como con $a = b$. Deben responderse positivamente si y sólo si pertenecen a una misma componente.
     \item Grafos con distintas componentes fuertemente conexas conectadas entre sí, consultando por distintos pares $\langle a, b \rangle$ tales que $a$ y $b$ corresponden a la misma componente, tales que $a$ y $b$ pertenecen a distintas componentes y se puede ir de $a$ a $b$ pero no volver, y tales que $a$ y $b$ pertenecen a distintas componentes y se puede volver de $b$ a $a$ pero no ir. Deben responderse positivamente si y sólo si pertenecen a una misma componente.
 \end{itemize}
 
-Además, se usaron grafos de dimensiones en el orden de las cotas propuestas en el enunciado para el testeo con el objetivo de corroborar el funcionamiento correcto de la implementación ante un mayor volumen de datos. Se utilizaron grafos con una sola componente fuertemente conexa en los cuales, según la teoría, cualquier consulta debe ser respondida afirmativamente.
+Además, se usaron grafos de dimensiones en el orden de las cotas para testeo propuestas en el enunciado con el objetivo de corroborar el funcionamiento correcto de la implementación ante un mayor volumen de datos. Se utilizaron grafos con una sola componente fuertemente conexa en los cuales, según la teoría, cualquier consulta debe ser respondida afirmativamente.
