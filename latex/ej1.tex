@@ -52,3 +52,16 @@ La estructura utilizada para la representación de la red fue un vector de lista
 
 Notar que en recorrerCaminoDeAumento se borran y agregan aristas porque las capacidades de las mismas son siempre 1. De lo contrario habría que tenerse en cuenta la capacidad de las mismas, no se borrarían y agregarían sino que se aumentaría o restaría el flujo que pasa por el eje.
 
+\subsection{Correctitud}
+
+Lo que el algoritmo debe devolver es la minima cantidad de esquinas a donde puedan situarse estudiantes de modo tal que cada alumno de secundaria siempre tenga que pasar por una de estas esquinas sin importar que camino tome o a que colegio vaya.
+
+En otras palabras, existen conjuntos de esquinas para los cuales todos los caminos de las casas a las escuelas pasan por al menos una de las esquinas del conjunto. El que interesa es el de mínimo cardinal (un conjunto que tenga todas las esquinas por supuesto que cumpliría el requisito de interceptar los alumnos, pero no sería mínimo).
+
+Este conjunto de mínimo cardinal representa un cuello de botella en cuanto a los caminos que los alumnos de secundaria pueden elegir.
+
+Lo que el algoritmo devuelve es el valor flujo máximo. Por teorema se sabe que el valor del flujo máximo es igual a la capacidad del corte mínimo.
+
+Lo que hace que la capacidad del corte mínimo en esta red de flujo represente el cardinal del conjunto de esquinas es el hecho de que los vértices tengan capacidad 1. Esto provoca que la capacidad del corte no este dada por la capacidad de las aristas salientes sino por la cantidad de nodos del corte que tienen aristas salientes. Entonces si para cualquier corte de esta red de flujo, su capacidad es igual a la cantidad de nodos con aristas salientes, es decir, esquinas de las cuales salen caminos, consiguiendo el corte mínimo se obtendría el cuello de botella y su capacidad sería el cardinal del conjunto.
+
+Entonces el valor del flujo máximo de esta red es la mínima cantidad de esquinas en las que deben situarse estudiantes para poder interceptar a todos los alumnos sin importar qué caminos tomen o a qué escuela asistan.
