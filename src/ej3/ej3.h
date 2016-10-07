@@ -28,13 +28,13 @@ public:
 	}
 
 	friend istream& operator >>(istream& i, Graph& graph) {
-		cin >> graph.N;
-		cin >> graph.M;
+		i >> graph.N;
+		i >> graph.M;
 		graph.adjacency = vector< list< pair<int, int> > >(graph.N, list< pair<int, int> >());
-		for (int i = 0; i < graph.M; ++i) {
+		for (int j = 0; j < graph.M; ++j) {
 			int v, w;
-			cin >> v; cin >> w;
-			graph.addEdge(i, v-1, w-1);
+			i >> v; i >> w;
+			graph.addEdge(j, v-1, w-1);
 		}
 		return i;
 	}

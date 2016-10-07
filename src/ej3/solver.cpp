@@ -12,7 +12,7 @@ vector<int> low;
 vector<bool> bridge;
 vector<int> bridge_component_of_node;
 vector<int> bridge_component_nodes;
-int bridge_component_counter = 0;
+int bridge_component_counter;
 
 // -------------------- Code -----------------------
 
@@ -34,6 +34,7 @@ void run_solver() {
 	bridge = vector<bool>(graph.M, false);
 	bridge_component_of_node = vector<int>(graph.N, -1);
 	bridge_component_nodes = vector<int>(graph.N, 0);
+	bridge_component_counter = 0;
 
 	//Main DFS
 	calculate_bridges(graph, 0, 0, 0);
