@@ -15,7 +15,7 @@ Las capacidades de las aristas serán de 1, pero además también deben tener ca
 \includegraphics[scale=0.6]{imagenes/ej1_capacidades_nodos.pdf}
 \end{figure}
 
-Se construye la red residual y luego se aplica el ya conocido algoritmo de Edmond-Karps para conocer el flujo máximo.
+Se construye la red residual y luego se aplica el ya conocido algoritmo de \textit{Edmonds-Karps} para conocer el flujo máximo.
 
 \subsubsection*{Detalles implementativos}
 
@@ -78,6 +78,14 @@ Lo que hace que la capacidad del corte mínimo en esta red de flujo represente e
 Entonces el valor del flujo máximo de esta red es la mínima cantidad de esquinas en las que deben situarse estudiantes para poder interceptar a todos los alumnos sin importar qué caminos tomen o a qué escuela asistan.
 
 \subsection{Complejidad}
+
+Lo primero a analizar es la lectura de la entrada. Previamente se detalló el procedimiento que constaba de dos ciclos. El primero lee las $N$ esquinas y al hacerlo las agrega a la correspondiente lista en tiempo constante, por lo que ese ciclo tiene complejidad temporal $\ord(N)$. El segundo lee las $M$ calles y también realiza la correspondiente inclusión en una lista en tiempo constante, por lo que la complejidad es $\ord(M)$. La complejidad temporal de la lectura es $\ord(M + N)$.
+
+Hecho esto la cantidad de nodos de la red de flujo es de $2N + 2$ debido a que cada nodo es representado por una arista como fue especificado anteriormente, lo cual inserta dos nodos por esquina, y a que se tiene dos nodos adicionales que representan la fuente y el sumidero. La cantidad de aristas es $2M + N$ porque por cada calle se agregan 2 aristas ya que son bidireccionales, y cada esquina también es una arista.
+
+Si a este grafo se le aplica el algoritmo de \textit{Edmonds-Karps}, que es $\ord(E^2V)$, la complejidad queda $\ord((2M + N)^2(2N + 2))$.
+
+Como el grafo es conexo ya que existe un camino entre cada par de esquinas se sabe que $N \leq M + 1$ por lo que podemos acotarlo quedando de esta forma la complejidad $\ord((2M + M + 1)^2(2N + 2)) = \ord(M^2N)$.
 
 \subsection{Casos de prueba}
 
