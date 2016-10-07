@@ -338,37 +338,48 @@ se pide en el enunciado.
 
 En primera instancia comprobamos que el algoritmo devuelva la salida correcta para los casos provistos por la cátedra. \\
 Luego generamos nuestras propias instancias bajo las cotas del enunciado ($N  \leq  10^4, M \leq 10^5,Q \leq 10^5,Q_A  \leq 10^3$). \\
-Mediante estos, comprobamos no solo la correctitud misma del algoritmo sino también casos borde 
-(por ejemplo, el grafo estrella y el grafo linea) y que no tarde demasiado en encontrar una respuesta para instancias grandes. \\
+Mediante estos, comprobamos la correctitud misma del algoritmo con casos simples y otros casos conocidos 
+(por ejemplo, el grafo estrella y el grafo linea) viendo que no tarde demasiado en encontrar una respuesta para instancias grandes. \\
+
 Los casos probados fueron:
 \begin{itemize}
-	\item Esquinas y calles formando grafo linea con $N$=$10^4$ y $Q_A$=$10^3$.
-	\item Esquinas y calles formando grafo estrella con $N$=$10^4$ y $Q$=$10^5$.
-	\item Esquinas y calles formando el siguiente grafo ($Q=10$):
+	\item Caso provisto por la cátedra.
+	\item Para probar complejidad: esquinas y calles formando grafo linea con $N$=$10^4$, $Q_A$=$10^3$, $Q_B=Q_C=0$.
+	\item Para probar complejidad: esquinas y calles formando grafo estrella con $N$=$10^4$ y $Q_A$=$Q_B$=$Q_C$=$10^4$.
+	\item Caso simple controlado: esquinas y calles formando el siguiente grafo:
 		\begin{figure}[H]
 		\centering
 		\begin{tikzpicture}
 		\begin{scope}[every node/.style={circle,thick,draw}]
-		    \node (A) at (0,0) {A};
-		    \node (B) at (0,2) {B};
-		    \node (C) at (1,1) {C};
-		    \node (D) at (3,1) {D};
-		    \node (E) at (4,0) {E};
-		    \node (F) at (4,2) {F};
+		    \node (0) at (0,2) {0};
+		    \node (1) at (0,0) {1};
+		    \node (2) at (2,0) {2};
+		    \node (3) at (2,2) {3};
+		    \node (4) at (4,0) {4};
+		    \node (5) at (6,2) {5};
+		    \node (6) at (8,0) {6};
+		    \node (7) at (10,2) {7};
+		    \node (8) at (12,0) {8};
+		    \node (9) at (14,0) {9};
 		\end{scope}
 
 		\begin{scope}[>={Stealth[black]},
 		              every node/.style={fill=white,circle},
 		              every edge/.style={draw=black,very thick}]
-		    \path [-] (A) edge (B);
-		    \path [-] (A) edge (C);
-		    \path [-] (B) edge (C);
-		    \path [-] (C) edge[draw=red] (D);
-		    \path [-] (D) edge (E);
-		    \path [-] (E) edge (F);
-		    \path [-] (F) edge (D); 
+		    \path [-] (0) edge (1);
+		    \path [-] (0) edge (3);
+		    \path [-] (2) edge (1);
+		    \path [-] (2) edge (3);
+		    \path [-] (2) edge (4);
+		    \path [-] (4) edge (5);
+		    \path [-] (4) edge (6);
+		    \path [-] (5) edge (6);
+		    \path [-] (6) edge (7);
+		    \path [-] (6) edge (8);
+		    \path [-] (7) edge (8);
+		    \path [-] (8) edge (9);
 		\end{scope}
 		\end{tikzpicture}
 		\end{figure}
-	\item Caso provisto por la cátedra.
+		Con $Q_A$=$Q_B$=$Q_C$=$10$.
 \end{itemize}
