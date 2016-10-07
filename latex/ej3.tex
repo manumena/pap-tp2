@@ -2,7 +2,7 @@
 
 \subsection{Problema}
 
-El enunciado nos pide, dadas N esquinas y M calles bidireccionales resolver Q queries de varios tipos:
+El enunciado pide, dadas N esquinas y M calles bidireccionales resolver Q queries de varios tipos:
 \begin{itemize}
 	\item[A: ] dadas dos esquinas e1 y e2, imprimir la cantidad de calles que en caso de ser cortadas impiden llegar de e1 a e2.
 	\item[B: ] dada una calle, imprimir un 1 si al cortar la calle existen al menos dos esquinas entre las que deja de haber un camino, y 0 en caso contrario.
@@ -15,21 +15,21 @@ El modelo que se plantea entonces es representar las esquinas y calles como nodo
 Se asegura que el grafo es conexo (pues hay un camino para cada par de esquinas) y que hay una cantidad positiva de nodos y aristas.
 Además, no hay calles que conectan las mismas esquinas, por lo cual no habrá ejes repetidos. \\
 
-Debido a la complejidad que nos piden y que el grafo es conexo (hay al menos tantos aristas como vértices menos uno) y el algoritmo y nociones
-vistas en clase para calcular Componentes Biconexas Maximales vamos a querer representar los aristas del grafo como listas de adyacencia para asi 
+Debido a la complejidad que se pide y que el grafo es conexo (hay al menos tantos aristas como vértices menos uno) y el algoritmo y nociones
+vistas en clase para calcular Componentes Biconexas Maximales se va a querer representar los aristas del grafo como listas de adyacencia para as\'i 
 recorrer los nodos del grafo en tiempo lineal con respecto a la cantidad de aristas mediante DFS. Luego mas adelante se ve que las queries se resuelven
 calculando puentes y otras propiedades entre los nodos del grafo mediante DFS. \\
 
-Finalmente se debe imprimir el resultado de cada query segun su tipo, lo cual explicamos en detalle en la sección de Correctitud. \\
+Finalmente se debe imprimir el resultado de cada query seg\'un su tipo, lo cual se explica en detalle en la sección de Correctitud. \\
 
 \subsection{Algoritmo e intuición}
 
 \subsubsection*{Pseudocódigo}
 
 Sea la clase $Grafo = <Vertices, Aristas, ListaAdyacencia>$
-	donde Vertices y Aristas son Enteros que representan la cantidad de vertices y aristas del grafo y
+	donde Vertices y Aristas son Enteros que representan la cantidad de vértices y aristas del grafo y
 	ListaAdyacencia es un $Vector<Lista<Par<Entero, Entero>>>$ donde
-	el tamano del vector es Vertices y por cada arista que conecta nodos v 
+	el tamaño del vector es Vertices y por cada arista que conecta nodos v 
 	y w del grafo representado, ListaAdyacencia[v] incluye $<e, w>$ y
 	ListaAdyacencia[w] incluye $<e, v>$ donde $e$ es el número de arista (entre 0 y Aristas-1).
 
@@ -119,14 +119,14 @@ Sea la clase $Grafo = <Vertices, Aristas, ListaAdyacencia>$
 
 \subsubsection*{Estrategia}
 
-Primero calculamos los ejes puentes con un algoritmo similar al que calcula Componentes Biconexas Maximales. Por esto
-guardamos los ejes del grafo como lista de adyancecia y para cada eje guardamos su numero de eje (asi despues los podemos
-marcar rapido como eje puente). Se recorre el grafo mediante DFS y asi podemos garantizar que su complejidad sera lineal 
+Primero se calculan los ejes puentes con un algoritmo similar al que calcula Componentes Biconexas Maximales. Por esto
+se guardan los ejes del grafo como lista de adyacencia y para cada eje se guarda su numero de eje (as\'i despu\'es los podemos
+marcar rápido como eje puente). Se recorre el grafo mediante DFS y as\'i podemos garantizar que su complejidad sera lineal 
 con respecto a la cantidad de vertices y aristas. \\
-Luego separamos los nodos en Bridge Components (explicación en la seccion siguiente). Esto lo hacemos tambien mediante DFS. \\
-Finalmente contestamos cada query segun los datos calculados previamente excepto en el caso de las queries tipo A en cuyo caso 
-se calculan los aristas puentes entre los nodos que representan las esquinas. Nuevamente usamos DFS. \\
-A lo largo de todos los algoritmos vamos manteniendo vectores de longitud grafo.Aristas o grafo.Vertices para ir guardando resultados
+Luego se separan los nodos en Bridge Components (explicación en la secci\'on siguiente). Esto lo hacemos tambi\'en mediante DFS. \\
+Finalmente se contesta cada query seg\'un los datos calculados previamente excepto en el caso de las queries tipo A en cuyo caso 
+se calculan los aristas puentes entre los nodos que representan las esquinas. Nuevamente se usa DFS. \\
+A lo largo de todos los algoritmos se va manteniendo vectores de longitud grafo.Aristas o grafo.Vertices para ir guardando resultados
 parciales y nodos visitados en cada recorrido DFS del grafo. \\
 
 \subsection{Correctitud}
@@ -156,15 +156,49 @@ Con esta motivación definimos los Bridge Components del grafo. Estos componente
 maximal que no es un puente en un solo nodo. \\
 
 Ejemplo:\\
+
 \begin{figure}[H]
-\centering
-\includegraphics[width=90mm]{./img/bridge_comp_1.jpeg}
 \caption{Grafo original}
-\end{figure}
-\begin{figure}[H]
 \centering
-\includegraphics[width=90mm]{./img/bridge_comp_2.jpeg}
+\begin{tikzpicture}
+\begin{scope}[every node/.style={circle,thick,draw}]
+    \node (A) at (0,0) {A};
+    \node (B) at (0,2) {B};
+    \node (C) at (1,1) {C};
+    \node (D) at (3,1) {D};
+    \node (E) at (4,0) {E};
+    \node (F) at (4,2) {F};
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every node/.style={fill=white,circle},
+              every edge/.style={draw=black,very thick}]
+    \path [-] (A) edge (B);
+    \path [-] (A) edge (C);
+    \path [-] (B) edge (C);
+    \path [-] (C) edge[draw=red] (D);
+    \path [-] (D) edge (E);
+    \path [-] (E) edge (F);
+    \path [-] (F) edge (D); 
+\end{scope}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
 \caption{Grafo condensado en Bridge Components}
+\centering
+\begin{tikzpicture}
+\begin{scope}[every node/.style={circle,thick,draw}]
+    \node (A) at (0,0) {A,B,C};
+    \node (D) at (2,0) {D,E,F};
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every node/.style={fill=white,circle},
+              every edge/.style={draw=black,very thick}]
+    \path [-] (A) edge[draw=red] (D);
+\end{scope}
+\end{tikzpicture}
 \end{figure}
 
 El algoritmo CalcularComponentesPuenteDFS hace esto guardando para cada nodo 
@@ -180,7 +214,7 @@ Finalmente, el algoritmo resuelve las queries según su tipo correspondiente:
 	del grafo que representan esas esquinas.
 	\item[B: ] se fija en el vector $puentes$ si la calle es un puente o no y lo imprime.
 	\item[C: ] dada una esquina e1 se quiere imprimir la cantidad de esquinas e2 tales que de cortar una calle cualquiera 
-	sigue habiendo camino de e1 a e2. Como explicamos esto es exactamente la cantidad de nodos en el Bridge Component del
+	sigue habiendo camino de e1 a e2. Como se explico, esto es exactamente la cantidad de nodos en el Bridge Component del
 	grafo, que son justamente los nodos e2 que están conectados a e1 sin puentes entre e1 y e2, entonces sin importar
 	qué calle se corte, seguirán estando conectados. Los demás nodos son posibles de desconectar de e1 cortando alguno
 	de los aristas puentes entre e1 y esos nodos. Notar que a esta cantidad se le resta 1 para no contar a e1 en su 
@@ -189,43 +223,43 @@ Finalmente, el algoritmo resuelve las queries según su tipo correspondiente:
 
 \subsubsection*{CalcularPuentesDFS}
 
-Este algoritmo es casi idéntico al visto en clase para calcular Componentes Biconexas maximales. \\
+Este algoritmo es cas\'i idéntico al visto en clase para calcular Componentes Biconexas maximales. \\
 
 Dados los vectores $puentes$, $depth$, $low$ va guardando mediante un recorrido DFS en:
 \begin{itemize}
 	\item $puentes$: para cada numero de arista, si ese arista es un puente.
-	\item $depth$: la distancia del nodo actual al nodo raiz del arbol DFS mediante Tree edges.
-	\item $low$: la menor distancia/$depth$ de la raiz del arbol DFS a la que el nodo actual puede saltar
-	desde su sub-arbol de DFS con raiz en si mismo. \\
+	\item $depth$: la distancia del nodo actual al nodo raiz del \'arbol DFS mediante Tree edges.
+	\item $low$: la menor distancia/$depth$ de la raiz del \'arbol DFS a la que el nodo actual puede saltar
+	desde su sub-\'arbol de DFS con raiz en si mismo. \\
 	Esto quiere decir que dado el nodo v: $low[v]$ = $\min(d[v], \min\limits_{y \in hijosDFS(v)} low[y], \min\limits_{backedge(v,w)} d[w])$
 \end{itemize}
 
 Para calcular los $low$ se va recorriendo mediante DFS la lista de adyacencia de los nodos y para cada nodo:
 \begin{itemize}
-	\item Si es no visitado (nos fijamos que $depth$ de ese nodo no sea -1) hacemos una llamada recursiva con el nodo
-	actual ahora como padre y al Entero $d$ le sumamos 1 indicando que en el arbol de DFS actual ese nodo
-	estará a un nodo de distancia más de la raiz del arbol. Después actualizamos el $low$ del nodo actual
-	como el mínimo entre este y el del nodo hijo que visitamos ya que si un hijo puede llegar a un nodo
-	mas cercano a la raiz del arbol, el nodo actual también. \\
+	\item Si es no visitado (hay que fijarse que $depth$ de ese nodo no sea -1) hacemos una llamada recursiva con el nodo
+	actual ahora como padre y al Entero $d$ se le suma 1 indicando que en el \'arbol de DFS actual ese nodo
+	estará a un nodo de distancia más de la raiz del \'arbol. Después se actualiza el $low$ del nodo actual
+	como el mínimo entre este y el del nodo hijo que se visita ya que si un hijo puede llegar a un nodo
+	mas cercano a la raiz del \'arbol, el nodo actual también. \\
 	$Observaci\acute{o}n (clase)$: Un tree-edge del nodo v a uno de sus hijos w es puente si y solo si, low[w] $\ge$ depth[w], es decir, 
 	no existe ning\'un back-edge que permita salir del sub\'arbol con ra\'iz en w.
-	\item Si el nodo fue visitado (es ancestro en el arbol de DFS) actualizamos el $low$ del nodo actual
+	\item Si el nodo fue visitado (es ancestro en el \'arbol de DFS) se actualiza el $low$ del nodo actual
 	como el mínimo entre este y el $depth$ nodo ancestro ya que es un back-edge.
 \end{itemize}
 
 El algoritmo en si solo difiere con el visto en clase en que en vez de ir guardando puentes, puntos de 
-articulación y reportar componentes biconexas maximales, solo guardamos los aristas puentes. \\
+articulación y reportar componentes biconexas maximales, solo se guardan los aristas puentes. \\
 
 $Observaci\acute{o}n$: el grafo tiene que ser conexo para devolver todos los puentes (pero sabemos por la entrada que lo es). \\
 
 $Observaci\acute{o}n$: el parámetro $d$ inicial siempre es 0 porque es la distancia de la raiz a si misma. \\
 
-$Observaci\acute{o}n$: si bien el nodo inicial (que será la raiz del arbol DFS) es arbitrario, se quiere que
-este sea el nodo 0 ya que el problema nos asegura solamente que hay al menos un nodo en todo el grafo. \\
+$Observaci\acute{o}n$: si bien el nodo inicial (que será la raiz del \'arbol DFS) es arbitrario, se quiere que
+este sea el nodo 0 ya que el enunciado asegura solamente que hay al menos un nodo en todo el grafo. \\
 
 \subsubsection*{CalcularComponentesPuenteDFS}
 
-Como explicamos anteriormente, en este algoritmo vamos a querer calcular por cada nodo a qué Bridge Component pertenece
+Como fue explicado anteriormente, en este algoritmo se va a querer calcular por cada nodo a qué Bridge Component pertenece
 y cuantos nodos tiene cada Bridge Component. \\
 
 Habiendo ya calculado los aristas $puentes$ esto se resuelve de la siguiente manera:
@@ -233,9 +267,9 @@ Habiendo ya calculado los aristas $puentes$ esto se resuelve de la siguiente man
 	\item Mantenemos en el vector $componente\_puente\_del\_vertice$ el Bridge Component al que pertenece cada nodo.
 	\item Mantenemos en el vector $vertices\_del\_componente\_puente$ cuántos nodos tiene cada una de estas componentes
 	(notar que son a lo sumo grafo.Vertices componentes porque los Bridge Components particionan los nodos del grafo).
-	\item Tenemos un valor $componente\_actual$ que va a ir cambiando a medida de que en el recorrido DFS pasamos por un arista puente.
-	\item Tenemos una variable global $contador\_componentes$ que, cuando pasamos por una arista puente en el DFS (es decir, cambiamos
-	de componente) usamos para tomar un nuevo n\'umero de componente para asignarle asi nunca tenemos repetidos.
+	\item Tenemos un valor $componente\_actual$ que va a ir cambiando a medida de que en el recorrido DFS se pasa por un arista puente.
+	\item Tenemos una variable global $contador\_componentes$ que, cuando se pasa por una arista puente en el DFS (es decir, se cambia
+	de componente) se usa para tomar un nuevo n\'umero de componente para as\'ignarle as\'i nunca tenemos repetidos.
 	\item En el recorrido DFS, para cada nodo $v$ recorremos su lista de adyancecia y por cada nodo $w$ no visitado
 	($componente\_puente\_del\_vertice[w]$ == -1) si el arista que los conecta es un puente hacemos un llamado recursivo cambiando el
 	Bridge Component y en caso contrario hacemos un llamado recursivo con el mismo Bridge Component.
@@ -243,7 +277,7 @@ Habiendo ya calculado los aristas $puentes$ esto se resuelve de la siguiente man
 
 Recorrer el grafo de esta manera usando DFS efectivamente agrupa los nodos en Bridge Components porque de antemano se sabe cuales son 
 los aristas $puentes$ y entonces el DFS llega hasta cada nodo que no pasa por un puente con el mismo valor de $componente\_actual$ (si
-cambia de componente es porque habia un puente y ya no se puede volver mediante DFS a un componente anterior sin pasar por ese puente). \\
+cambia de componente es porque había un puente y ya no se puede volver mediante DFS a un componente anterior sin pasar por ese puente). \\
 
 $Observaci\acute{o}n$: el grafo tiene que ser conexo para recorrer todos los Bridge Components (pero sabemos por la entrada que lo es). \\
 
@@ -251,10 +285,10 @@ $Observaci\acute{o}n$: el grafo tiene que ser conexo para recorrer todos los Bri
 
 Devuelve para un par de nodos $src$ y $dst$ la cantidad de puentes entre ellos. \\
 
-Esto se hace recorriendo mediante DFS el grafo con las listas de adyancecia de cada nodo y manteniendo los visitados en el vector
+Esto se hace recorriendo mediante DFS el grafo con las listas de adyacencia de cada nodo y manteniendo los visitados en el vector
 $visitado$. \\
-Es importante tener en cuenta que en el arbol DFS del grafo hay un unico camino simple entre cada par de nodos (porque es un arbol)
-y que este camino entonces va a pasar por todos los  aristas puentes entre $src$ y $dst$ (porque el arbol DFS necesariamente contiene
+Es importante tener en cuenta que en el \'arbol DFS del grafo hay un único camino simple entre cada par de nodos (porque es un \'arbol)
+y que este camino entonces va a pasar por todos los  aristas puentes entre $src$ y $dst$ (porque el \'arbol DFS necesariamente contiene
 a todos los aristas puentes del grafo, sino se desconecta). \\
 De esta manera se recorre cada nodo (mantenido en el parámetro $actual$ del algoritmo, que inicialmente debe ser $src$)
 hasta llegar al destino $dst$. Por cada arista voy sumando 1 a la cantidad de puentes si el arista es un puente y cuando llego a $dst$ 
@@ -266,34 +300,34 @@ porque el grafo es conexo de entrada. \\
 
 \subsection{Complejidad}
 
-Sea N la cantidad de esquinas/nodos del grafo y M la cantidad de calles/aristas del grafo nos piden un algoritmo con complejidad
+Sea N la cantidad de esquinas/nodos del grafo y M la cantidad de calles/aristas del grafo, se pide un algoritmo con complejidad
 $O(M+MQ_A+Q_B+Q_C)$ donde $Q_X$ es la cantidad de queries de tipo $X$. \\
 
 Como el grafo es conexo sabemos que $O(N) \subseteq O(M)$ (porque M es al menos N-1). \\
 
 CalcularPuentesDFS hace un recorrido DFS del grafo para calcular los ejes puentes de la misma forma que el algoritmo para calcular
 Componentes Biconexas Maximales que vimos en clase es $O(N+M)$ porque cada nodo se recorre una sola vez a través de llamados recursivos
-y, aparte de esto, solo se realizan asignaciones y comparaciones. Como se vio antes $O(N) \subseteq O(M)$, entonces $O(N+M) \subseteq O(M)$.  \\
+y, aparte de esto, solo se realizan as\'ignaciones y comparaciones. Como se vio antes $O(N) \subseteq O(M)$, entonces $O(N+M) \subseteq O(M)$.  \\
 
 CalcularComponentesPuenteDFS hace un recorrido DFS como en CalcularPuentesDFS y podemos saber los nodos ya visitados mediante el vector
-$componente\_puente\_del\_vertice$ por lo cual recorremos cada nodo una sola vez y cada arista lo consideramos solo en los ciclos For de
-los nodos que conecta. Aparte de los llamados recursivos que componen el DFS solo hay asignaciones y comparaciones, por lo cual la funci\'on
+$componente\_puente\_del\_vertice$ por lo cual recorremos cada nodo una sola vez y cada arista se considera solo en los ciclos For de
+los nodos que conecta. Aparte de los llamados recursivos que componen el DFS solo hay as\'ignaciones y comparaciones, por lo cual la funci\'on
 es $O(N+M) \subseteq O(M)$. \\
 
 PuentesEntreNodos también hace un recorrido DFS como las dos funciones anteriores y mantiene los nodos visitados en el vector $visitado$. Aparte
-de esto solo se realizan comparaciones y asignaciones, por lo que esta funci\'on tambi\'en tiene complejidad $O(N+M) \subseteq O(M)$. \\
+de esto solo se realizan comparaciones y as\'ignaciones, por lo que esta funci\'on tambi\'en tiene complejidad $O(N+M) \subseteq O(M)$. \\
 
 ResolverQueries (el algoritmo principal):
 \begin{itemize}
 	\item Crea 5 vectores de longitud $O(N)$ o bien $O(M)$, ambos siendo $O(M)$. Entonces la complejidad de crearlos es $O(5M) \subseteq O(M)$.
 	\item Hace un llamado a la funci\'on CalcularPuentesDFS que tiene complejidad $O(M)$.
 	\item Hace un llamado a la funci\'on CalcularComponentesPuenteDFS que tiene complejidad $O(M)$.
-	\item Por cada query de tipo A creamos un vector de longitud $O(N) \subseteq O(M)$ y se hace un llamado a 
+	\item Por cada query de tipo A se crea un vector de longitud $O(N) \subseteq O(M)$ y se hace un llamado a 
 	PuentesEntreNodos que es $O(M)$. En total por cada query de tipo A se hace trabajo $O(M+M) \subseteq O(M)$. Como
 	hay $Q_A$ queries de tipo A, estas conllevan una complejidad de $O(MQ_A)$.
 	\item Por cada query de tipo B solo se tiene que imprimir un valor ya calculado de un vector, lo cual es $O(1)$. Como
 	hay $Q_B$ queries de tipo B, estas conllevan una complejidad de $O(Q_B)$.
-	\item Por cada query de tipo C solo se realizan comparaciones y asignaciones, lo cual es $O(1)$. Como
+	\item Por cada query de tipo C solo se realizan comparaciones y as\'ignaciones, lo cual es $O(1)$. Como
 	hay $Q_C$ queries de tipo C, estas conllevan una complejidad de $O(Q_C)$.
 \end{itemize}
 
@@ -301,3 +335,51 @@ Por lo tanto, teniendo en cuenta los 6 items previos, la complejidad final es $O
 se pide en el enunciado.
 
 \subsection{Casos de prueba}
+
+En primera instancia se comprueba que el algoritmo devuelva la salida correcta para los casos provistos por la cátedra. \\
+Luego se generaron nuevas instancias bajo las cotas del enunciado ($N  \leq  10^4, M \leq 10^5,Q \leq 10^5,Q_A  \leq 10^3$). \\
+Mediante estos, se comprueba la correctitud misma del algoritmo con casos simples y otros casos conocidos 
+(por ejemplo, el grafo estrella y el grafo linea) viendo que no tarde demasiado en encontrar una respuesta para instancias grandes. \\
+
+Algunos de los casos probados fueron:
+\begin{itemize}
+	\item Caso provisto por la cátedra.
+	\item Para probar complejidad: esquinas y calles formando grafo linea con $N$=$10^4$, $Q_A$=$10^3$, $Q_B=Q_C=0$.
+	\item Para probar complejidad: esquinas y calles formando grafo estrella con $N$=$10^4$ y $Q_A$=$Q_B$=$Q_C$=$10^4$.
+	\item Caso simple controlado: esquinas y calles formando el siguiente grafo:
+		\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+		\begin{scope}[every node/.style={circle,thick,draw}]
+		    \node (0) at (0,2) {0};
+		    \node (1) at (0,0) {1};
+		    \node (2) at (2,0) {2};
+		    \node (3) at (2,2) {3};
+		    \node (4) at (4,0) {4};
+		    \node (5) at (6,2) {5};
+		    \node (6) at (8,0) {6};
+		    \node (7) at (10,2) {7};
+		    \node (8) at (12,0) {8};
+		    \node (9) at (14,0) {9};
+		\end{scope}
+
+		\begin{scope}[>={Stealth[black]},
+		              every node/.style={fill=white,circle},
+		              every edge/.style={draw=black,very thick}]
+		    \path [-] (0) edge (1);
+		    \path [-] (0) edge (3);
+		    \path [-] (2) edge (1);
+		    \path [-] (2) edge (3);
+		    \path [-] (2) edge (4);
+		    \path [-] (4) edge (5);
+		    \path [-] (4) edge (6);
+		    \path [-] (5) edge (6);
+		    \path [-] (6) edge (7);
+		    \path [-] (6) edge (8);
+		    \path [-] (7) edge (8);
+		    \path [-] (8) edge (9);
+		\end{scope}
+		\end{tikzpicture}
+		\end{figure}
+		Con $Q_A$=$Q_B$=$Q_C$=$10$.
+\end{itemize}
