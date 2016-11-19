@@ -7,6 +7,86 @@ using namespace std;
 **  Problem solver
 */
 
+#define SOURCE  0
+#define SINK    1
+
+list<int> from_path(const vector<int> &previous, const int initial_node, const int final_node) {
+	list<int> path;
+
+	int current = final_node;
+	while (current != initial_node) {
+		path.push_front(current);
+		current = previous[current];
+	}
+	path.push_front(initial_node);
+
+	return path;
+}
+
+list<int> bfs(const vector<list<int>> &graph, const int initial_node, const int final_node) {
+	int n = graph.size();
+	vector<int> previous(n);
+	bool valid = false;
+
+	vector<bool> visited(n, false);
+	visited[initial_node] = true;
+
+	queue<int> pending;
+	pending.push(initial_node);
+
+	int current;
+	while (!pending.empty()) {
+
+		current = pending.front();
+		pending.pop();
+
+		if(current == final_node)
+			valid = true;
+
+		for (list<int>::const_iterator it = graph[current].begin(); it != graph[current].end(); it++) {
+			if(!visited[*it]){
+				visited[*it] = true;
+				pending.push(*it);
+				previous[*it] = current;
+			}
+		}
+	}
+
+	if(valid)
+		return from_path(previous, initial_node, final_node);
+	else
+		return list<int>();
+}
+
+void augment_path(vector<list<int>> &network, const list<int> path) {
+	list<int>::const_iterator it_current = path.begin();
+	list<int>::const_iterator it_next = path.begin();
+	it_next++;
+	while (it_next != path.end()) {
+		int from = *it_current;
+		int to = *it_next;
+
+		// This can be done only because all capacities are 1
+		network[from].remove(to);
+		network[to].push_back(from);
+
+		it_current++;
+		it_next++;
+	}
+}
+
+int max_flow(vector<list<int>> network) {
+	list<int> path = bfs(network, SOURCE, SINK);
+	int flow = 0;
+	while (!path.empty()) {
+		augment_path(network, path);
+		path = bfs(network, SOURCE, SINK);
+		flow++;
+	}
+	return flow;
+}
+
+// is 'i' bounded by 'j'
 bool is_bounded(const vector<vector<int>>& stock_value_matrix, const int day_count, const int i, const int j) {
 	bool bounded = true;
 
@@ -21,96 +101,33 @@ bool is_bounded(const vector<vector<int>>& stock_value_matrix, const int day_cou
 	return bounded;
 }
 
-vector<vector<network_edge>> build_network(const vector<vector<int>>& stock_value_matrix,
+vector<list<int>> build_network(const vector<vector<int>>& stock_value_matrix,
 		const int stock_count, const int day_count) {
 	// build flow network
-	vector<vector<network_edge>> network_graph(2*stock_count + 1, vector<network_edge>());
+	vector<list<int>> network_graph(2 * stock_count + 2);
+
+	// first two nodes are SOURCE and SINK
+	int first_partition_offset = 2;
+	int second_partition_offset = stock_count + 2;
 
 	for (int i = 0; i < stock_count; i++) {
 		// add edge from source to node
-		network_graph[2*stock_count].push_back(network_edge(2*stock_count, i, 1));
+		network_graph[SOURCE].push_back(i + first_partition_offset);
 		// add edge between node and those which bound its stock
 		for (int j = 0; j < stock_count; j++) {
 			if (j != i && is_bounded(stock_value_matrix, day_count, i, j)) {
-				network_graph[i].push_back(network_edge(i, j + stock_count, 1));
+				network_graph[i + 2].push_back(j + second_partition_offset);
 			}
 		}
 		// add edge from node to sink
-		network_graph[i + stock_count].push_back(network_edge(i + stock_count, 2*stock_count + 1, 1));
+		network_graph[i + second_partition_offset].push_back(SINK);
 	}
 
 	return network_graph;
 }
 
-void update_network_edge(vector<vector<network_edge>>& network_graph, const int src, const int dst) {
-	// use full capacity
-	network_graph[src][dst].capacity = 0;
-
-	// add capacity to edge going in opposite direction
-	unsigned int i = 0;
-	while (i < network_graph[dst].size() &&
-			network_graph[dst][i].dst != src) {
-		i++;
-	}
-
-	if (i == network_graph[dst].size()) {
-		network_graph[dst].push_back(network_edge(dst, src, 1));
-	}
-	else {
-		network_graph[dst][i].capacity = 1;
-	}
-}
-
-int find_max_flow(vector<vector<network_edge>> network_graph, const int stock_count) {
-	bool sink_reachable = true;
-	int max_flow = 0;
-	stack<int> nodes_to_visit;
-	vector<pair<int, int>> flow(2*stock_count + 2, pair<int, int>());
-	vector<bool> visited(2*stock_count + 2, false);
-	int current_node;
-
-	// as long as there is an augmented path from source to sink
-	while (sink_reachable) {
-		sink_reachable = false;
-		// start from the source
-		nodes_to_visit.push(2*stock_count);
-		visited[2*stock_count] = true;
-		while (!nodes_to_visit.empty()) {
-			current_node = nodes_to_visit.top();
-			if (current_node == 2*stock_count + 1) {
-				// if we've reached the sink, update residual network
-				sink_reachable = true;
-				pair<int, int> flow_edge = flow[2*stock_count + 1];
-				while (flow_edge.first != 2*stock_count) {
-					update_network_edge(network_graph, flow_edge.first, flow_edge.second);
-					flow_edge = flow[flow_edge.first];
-				}
-				update_network_edge(network_graph, flow_edge.first, flow_edge.second);
-
-				max_flow++;
-				// reset depth first search variables
-				nodes_to_visit = stack<int>();
-				visited = vector<bool>(2*stock_count + 2, false);
-			}
-			else {
-				// otherwise, we continue searching for a path to the sink
-				nodes_to_visit.pop();
-				for (unsigned int i = 0; i < network_graph[current_node].size(); i++) {
-					if (network_graph[current_node][i].capacity > 0 && !visited[network_graph[current_node][i].dst]) {
-						// if the edge has capacity and dst hasn't been visited
-						visited[network_graph[current_node][i].dst] = true;
-						flow[network_graph[current_node][i].dst] = make_pair(current_node, i);
-						nodes_to_visit.push(network_graph[current_node][i].dst);
-					}
-				}
-			}
-		}
-	}
-	return max_flow;
-}
-
 int min_plots(const vector<vector<int>>& stock_value_matrix, const int stock_count, const int day_count) {
-	return stock_count - find_max_flow(build_network(stock_value_matrix, stock_count, day_count), stock_count);
+	return stock_count - max_flow(build_network(stock_value_matrix, stock_count, day_count));
 }
 
 void run_solver() {
